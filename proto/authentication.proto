@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+message AuthenticationChallengeRequest {
+}
+
+message AuthenticationChallengeResponse {
+    message Challenge { 
+        string did = 1;
+        string nonce = 2;
+    }
+    Challenge challenge = 1;
+    bytes signature = 2;
+}
+
+message AuthenticationRequest {
+    string nonce = 1;
+    string token = 2;
+}
+
+message AuthenticationResponse {
+}

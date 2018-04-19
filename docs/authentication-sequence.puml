@@ -1,0 +1,43 @@
+@startuml Authentication Sequence
+
+participant js as "JavaScript App"
+participant agent as "Portal Agent"
+actor mob as "Mobile App"
+
+== Challenge ==
+note over agent, js
+   Exchange happens over
+   Web Sockets interface (unencrypted)
+end note
+
+js -> agent : [AuthenticationChallengeRequest]
+agent -> agent : Service stores nonce
+agent -> js : [AuthenticationChallengeResponse (Did, Nonce, Signature)]
+
+js -> js : Generate QR code
+js -> mob : Present QR code containing the signed challenge
+... Waiting on user to respond ...
+
+== Token Generation ==
+mob -> mob : User scans the code
+note over mob 
+   Mobile app shows authentication screen
+   to accept or reject the request
+end note
+mob -> mob : User accepts or rejects\nthe authentication request
+
+mob -> mob : User generates a signed JWT token
+note over agent, mob
+   Exchange happens over
+   REST interface (encrypted)
+end note
+mob -> agent : Send JWT to agent\n[AuthenticationRequest (Token, Nonce)]
+agent --> mob : [AuthenticationResponse]
+agent -> agent : Store JWT, Lookup nonce
+
+== Authentication ==
+
+agent -> js : Send JWT back to app\n[AgentCredential (Type = BearerToken)]
+js -> js : Store JWT for use as bearer token to access user specific area
+
+@enduml

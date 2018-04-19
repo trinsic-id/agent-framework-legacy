@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+message Msg {
+    MessageType message_type = 1;
+    bytes content = 2;
+
+    // represents the target did the message is intended for. the message will may be encrypted using this did ver keys
+    // this field is user by cloud agents to route the message to the appropriate agent
+    string targetDid = 3;
+}
+
+enum MessageType {
+    DEFAULT = 0;
+    AGENT_CREDENTIAL = 1;
+
+    CONNECTION_OFFER_REQUEST = 100;
+    CONNECTION_OFFER_RESPONSE = 101;
+    CONNECTION_REQUEST = 102;
+    CONNECTION_RESPONSE = 103;
+
+    AUTHENTICATION_CHALLENGE_REQUEST = 200;
+    AUTHENTICATION_CHALLENGE_RESPONSE = 201;
+    AUTHENTICATION_REQUEST = 202;
+    AUTHENTICATION_RESPONSE = 203;
+
+    SCHEMA_CREATE_REQUEST = 300;
+    SCHEMA_CREATE_RESPONSE = 301;
+
+    CREDENTIAL_DEFINITION_CREATE_REQUEST = 350;
+    CREDENTIAL_DEFINITION_CREATE_RESPONSE = 351;
+
+    ENDPOINT_SEND_REQUEST = 9;
+
+    CREDENTIAL_OFFER_REQUEST = 400;
+    CREDENTIAL_OFFER_RESPONSE = 401;
+    CREDENTIAL_REQUEST = 402;
+    CREDENTIAL_RESPONSE = 403;
+
+    PROOF_CREATE_REQUEST = 500;
+    PROOF_CREATE_RESPONSE = 501;
+    PROOF_SEND_REQUEST = 502;
+    PROOF_SEND_RESPONSE = 503;
+
+    AGENT_NYM_CREATE_REQUEST = 600;
+    AGENT_NYM_CREATE_RESPONSE = 601;
+}
+
+message AgentCredential {
+    enum CredentialType {
+        BEARER_TOKEN = 0;
+        VERIFICATION_RESULT = 1;
+    }
+
+    string token = 1;
+    CredentialType type = 2;
+}
+
+message EndpointSendRequest {
+    string endpoint = 1;
+}
+
+message AgentNymCreateRequest {
+    string did = 1;
+    string verkey = 2;
+}
+
+message AgentNymCreateResponse {
+    Status status = 1;
+}
+
+message Response {
+    Status status = 1;
+}
+
+enum Status {
+    OK = 0;
+    ERROR = 1;
+}

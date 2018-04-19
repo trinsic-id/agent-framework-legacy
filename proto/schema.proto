@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message SchemaCreateRequest {
+    string name = 1;
+    string version = 2;
+    repeated string attribute_names = 3;
+}
+
+message SchemaCreateResponse {
+    string schema_id = 1;
+}
+
+message CredentialDefinitionCreateRequest {
+    string schema_id = 1;
+}
+
+message CredentialDefinitionCreateResponse {
+    string credential_definition_id = 1;
+}

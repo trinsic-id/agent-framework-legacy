@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+message ConnectionOfferRequest {
+}
+
+message ConnectionOfferResponse {
+    message Offer { 
+        string did = 1;
+        string nonce = 2;
+    }
+    Offer offer = 1;
+    bytes signature = 2;
+}
+
+message ConnectionRequest {
+    string did = 1;
+    string nonce = 3;
+}
+
+message ConnectionResponse {
+    enum Status {
+        STATUS_UNSET = 0;
+        OK = 1;
+        INVALID_SIGNATURE = 2;
+        MISSING_SIGNATURE = 3;
+        UNKNOWN_ERROR = 4;
+    }
+
+    Status status = 1;
+}
