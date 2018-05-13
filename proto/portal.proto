@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message RegisterIssuerRequest {
+    string owner_did = 1;
+}
+
+message RegisterIssuerResponse {
+    string issuer_did = 1;
+}

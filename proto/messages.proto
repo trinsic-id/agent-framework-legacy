@@ -43,6 +43,11 @@ enum MessageType {
 
     AGENT_NYM_CREATE_REQUEST = 600;
     AGENT_NYM_CREATE_RESPONSE = 601;
+
+    // Streetcred application specific messages
+
+    REGISTER_ISSUER_REQUEST = 1000;
+    REGISTER_ISSUER_RESPONSE = 1001;
 }
 
 message AgentCredential {

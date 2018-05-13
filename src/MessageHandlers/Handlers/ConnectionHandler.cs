@@ -26,7 +26,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// Initializes a new instance of the <see cref="T:MessageHandlers.Handlers.ConnectionHandler"/> class.
         /// </summary>
 		public ConnectionHandler() : this(MessageType.ConnectionOfferRequest,
-		                                  MessageType.ConnectionCreateRequest)
+		                                  MessageType.ConnectionRequest)
 		{
 		}
 
@@ -46,12 +46,12 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
                         var res = await ConnectionOffer(context);
                         return res.Wrap(MessageType.ConnectionOfferResponse);
                     }
-                case MessageType.ConnectionCreateRequest:
+                case MessageType.ConnectionRequest:
                     {
                         var connectionCreate = msg.Unwrap<ConnectionCreateRequest>();
 
                         var res = await ConnectionCreate(connectionCreate, requestContext.Verkey, context);
-                        return res.Wrap(MessageType.ConnectionCreateResponse);
+                        return res.Wrap(MessageType.ConnectionResponse);
                     }
             }
             throw new Exception("Unsupported message type");
