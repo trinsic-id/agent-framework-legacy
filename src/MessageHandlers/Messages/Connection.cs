@@ -23,20 +23,21 @@ public static partial class ConnectionReflection {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
           "ChBjb25uZWN0aW9uLnByb3RvIhgKFkNvbm5lY3Rpb25PZmZlclJlcXVlc3Qi",
-          "NQoXQ29ubmVjdGlvbk9mZmVyUmVzcG9uc2USCwoDZGlkGAEgASgJEg0KBW5v",
-          "bmNlGAIgASgJIjUKF0Nvbm5lY3Rpb25DcmVhdGVSZXF1ZXN0EgsKA2RpZBgB",
-          "IAEoCRINCgVub25jZRgDIAEoCSKxAQoYQ29ubmVjdGlvbkNyZWF0ZVJlc3Bv",
-          "bnNlEjAKBnN0YXR1cxgBIAEoDjIgLkNvbm5lY3Rpb25DcmVhdGVSZXNwb25z",
-          "ZS5TdGF0dXMiYwoGU3RhdHVzEhAKDFNUQVRVU19VTlNFVBAAEgYKAk9LEAES",
-          "FQoRSU5WQUxJRF9TSUdOQVRVUkUQAhIVChFNSVNTSU5HX1NJR05BVFVSRRAD",
-          "EhEKDVVOS05PV05fRVJST1IQBGIGcHJvdG8z"));
+          "gAEKF0Nvbm5lY3Rpb25PZmZlclJlc3BvbnNlEi0KBW9mZmVyGAEgASgLMh4u",
+          "Q29ubmVjdGlvbk9mZmVyUmVzcG9uc2UuT2ZmZXISEQoJc2lnbmF0dXJlGAIg",
+          "ASgMGiMKBU9mZmVyEgsKA2RpZBgBIAEoCRINCgVub25jZRgCIAEoCSIvChFD",
+          "b25uZWN0aW9uUmVxdWVzdBILCgNkaWQYASABKAkSDQoFbm9uY2UYAyABKAki",
+          "pQEKEkNvbm5lY3Rpb25SZXNwb25zZRIqCgZzdGF0dXMYASABKA4yGi5Db25u",
+          "ZWN0aW9uUmVzcG9uc2UuU3RhdHVzImMKBlN0YXR1cxIQCgxTVEFUVVNfVU5T",
+          "RVQQABIGCgJPSxABEhUKEUlOVkFMSURfU0lHTkFUVVJFEAISFQoRTUlTU0lO",
+          "R19TSUdOQVRVUkUQAxIRCg1VTktOT1dOX0VSUk9SEARiBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionOfferRequest), global::ConnectionOfferRequest.Parser, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionOfferResponse), global::ConnectionOfferResponse.Parser, new[]{ "Did", "Nonce" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionCreateRequest), global::ConnectionCreateRequest.Parser, new[]{ "Did", "Nonce" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionCreateResponse), global::ConnectionCreateResponse.Parser, new[]{ "Status" }, null, new[]{ typeof(global::ConnectionCreateResponse.Types.Status) }, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionOfferResponse), global::ConnectionOfferResponse.Parser, new[]{ "Offer", "Signature" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionOfferResponse.Types.Offer), global::ConnectionOfferResponse.Types.Offer.Parser, new[]{ "Did", "Nonce" }, null, null, null)}),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionRequest), global::ConnectionRequest.Parser, new[]{ "Did", "Nonce" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionResponse), global::ConnectionResponse.Parser, new[]{ "Status" }, null, new[]{ typeof(global::ConnectionResponse.Types.Status) }, null)
         }));
   }
   #endregion
@@ -169,8 +170,8 @@ public sealed partial class ConnectionOfferResponse : pb::IMessage<ConnectionOff
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public ConnectionOfferResponse(ConnectionOfferResponse other) : this() {
-    did_ = other.did_;
-    nonce_ = other.nonce_;
+    Offer = other.offer_ != null ? other.Offer.Clone() : null;
+    signature_ = other.signature_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -179,25 +180,25 @@ public sealed partial class ConnectionOfferResponse : pb::IMessage<ConnectionOff
     return new ConnectionOfferResponse(this);
   }
 
-  /// <summary>Field number for the "did" field.</summary>
-  public const int DidFieldNumber = 1;
-  private string did_ = "";
+  /// <summary>Field number for the "offer" field.</summary>
+  public const int OfferFieldNumber = 1;
+  private global::ConnectionOfferResponse.Types.Offer offer_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public string Did {
-    get { return did_; }
+  public global::ConnectionOfferResponse.Types.Offer Offer {
+    get { return offer_; }
     set {
-      did_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      offer_ = value;
     }
   }
 
-  /// <summary>Field number for the "nonce" field.</summary>
-  public const int NonceFieldNumber = 2;
-  private string nonce_ = "";
+  /// <summary>Field number for the "signature" field.</summary>
+  public const int SignatureFieldNumber = 2;
+  private pb::ByteString signature_ = pb::ByteString.Empty;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public string Nonce {
-    get { return nonce_; }
+  public pb::ByteString Signature {
+    get { return signature_; }
     set {
-      nonce_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      signature_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
     }
   }
 
@@ -214,16 +215,16 @@ public sealed partial class ConnectionOfferResponse : pb::IMessage<ConnectionOff
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (Did != other.Did) return false;
-    if (Nonce != other.Nonce) return false;
+    if (!object.Equals(Offer, other.Offer)) return false;
+    if (Signature != other.Signature) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override int GetHashCode() {
     int hash = 1;
-    if (Did.Length != 0) hash ^= Did.GetHashCode();
-    if (Nonce.Length != 0) hash ^= Nonce.GetHashCode();
+    if (offer_ != null) hash ^= Offer.GetHashCode();
+    if (Signature.Length != 0) hash ^= Signature.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -237,13 +238,13 @@ public sealed partial class ConnectionOfferResponse : pb::IMessage<ConnectionOff
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public void WriteTo(pb::CodedOutputStream output) {
-    if (Did.Length != 0) {
+    if (offer_ != null) {
       output.WriteRawTag(10);
-      output.WriteString(Did);
+      output.WriteMessage(Offer);
     }
-    if (Nonce.Length != 0) {
+    if (Signature.Length != 0) {
       output.WriteRawTag(18);
-      output.WriteString(Nonce);
+      output.WriteBytes(Signature);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -253,11 +254,11 @@ public sealed partial class ConnectionOfferResponse : pb::IMessage<ConnectionOff
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public int CalculateSize() {
     int size = 0;
-    if (Did.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Did);
+    if (offer_ != null) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(Offer);
     }
-    if (Nonce.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Nonce);
+    if (Signature.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Signature);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -270,11 +271,14 @@ public sealed partial class ConnectionOfferResponse : pb::IMessage<ConnectionOff
     if (other == null) {
       return;
     }
-    if (other.Did.Length != 0) {
-      Did = other.Did;
+    if (other.offer_ != null) {
+      if (offer_ == null) {
+        offer_ = new global::ConnectionOfferResponse.Types.Offer();
+      }
+      Offer.MergeFrom(other.Offer);
     }
-    if (other.Nonce.Length != 0) {
-      Nonce = other.Nonce;
+    if (other.Signature.Length != 0) {
+      Signature = other.Signature;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -288,24 +292,191 @@ public sealed partial class ConnectionOfferResponse : pb::IMessage<ConnectionOff
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 10: {
-          Did = input.ReadString();
+          if (offer_ == null) {
+            offer_ = new global::ConnectionOfferResponse.Types.Offer();
+          }
+          input.ReadMessage(offer_);
           break;
         }
         case 18: {
-          Nonce = input.ReadString();
+          Signature = input.ReadBytes();
           break;
         }
       }
     }
   }
 
+  #region Nested types
+  /// <summary>Container for nested types declared in the ConnectionOfferResponse message type.</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static partial class Types {
+    public sealed partial class Offer : pb::IMessage<Offer> {
+      private static readonly pb::MessageParser<Offer> _parser = new pb::MessageParser<Offer>(() => new Offer());
+      private pb::UnknownFieldSet _unknownFields;
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public static pb::MessageParser<Offer> Parser { get { return _parser; } }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public static pbr::MessageDescriptor Descriptor {
+        get { return global::ConnectionOfferResponse.Descriptor.NestedTypes[0]; }
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      pbr::MessageDescriptor pb::IMessage.Descriptor {
+        get { return Descriptor; }
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public Offer() {
+        OnConstruction();
+      }
+
+      partial void OnConstruction();
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public Offer(Offer other) : this() {
+        did_ = other.did_;
+        nonce_ = other.nonce_;
+        _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public Offer Clone() {
+        return new Offer(this);
+      }
+
+      /// <summary>Field number for the "did" field.</summary>
+      public const int DidFieldNumber = 1;
+      private string did_ = "";
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public string Did {
+        get { return did_; }
+        set {
+          did_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        }
+      }
+
+      /// <summary>Field number for the "nonce" field.</summary>
+      public const int NonceFieldNumber = 2;
+      private string nonce_ = "";
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public string Nonce {
+        get { return nonce_; }
+        set {
+          nonce_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        }
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public override bool Equals(object other) {
+        return Equals(other as Offer);
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public bool Equals(Offer other) {
+        if (ReferenceEquals(other, null)) {
+          return false;
+        }
+        if (ReferenceEquals(other, this)) {
+          return true;
+        }
+        if (Did != other.Did) return false;
+        if (Nonce != other.Nonce) return false;
+        return Equals(_unknownFields, other._unknownFields);
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public override int GetHashCode() {
+        int hash = 1;
+        if (Did.Length != 0) hash ^= Did.GetHashCode();
+        if (Nonce.Length != 0) hash ^= Nonce.GetHashCode();
+        if (_unknownFields != null) {
+          hash ^= _unknownFields.GetHashCode();
+        }
+        return hash;
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public override string ToString() {
+        return pb::JsonFormatter.ToDiagnosticString(this);
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public void WriteTo(pb::CodedOutputStream output) {
+        if (Did.Length != 0) {
+          output.WriteRawTag(10);
+          output.WriteString(Did);
+        }
+        if (Nonce.Length != 0) {
+          output.WriteRawTag(18);
+          output.WriteString(Nonce);
+        }
+        if (_unknownFields != null) {
+          _unknownFields.WriteTo(output);
+        }
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public int CalculateSize() {
+        int size = 0;
+        if (Did.Length != 0) {
+          size += 1 + pb::CodedOutputStream.ComputeStringSize(Did);
+        }
+        if (Nonce.Length != 0) {
+          size += 1 + pb::CodedOutputStream.ComputeStringSize(Nonce);
+        }
+        if (_unknownFields != null) {
+          size += _unknownFields.CalculateSize();
+        }
+        return size;
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public void MergeFrom(Offer other) {
+        if (other == null) {
+          return;
+        }
+        if (other.Did.Length != 0) {
+          Did = other.Did;
+        }
+        if (other.Nonce.Length != 0) {
+          Nonce = other.Nonce;
+        }
+        _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public void MergeFrom(pb::CodedInputStream input) {
+        uint tag;
+        while ((tag = input.ReadTag()) != 0) {
+          switch(tag) {
+            default:
+              _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+              break;
+            case 10: {
+              Did = input.ReadString();
+              break;
+            }
+            case 18: {
+              Nonce = input.ReadString();
+              break;
+            }
+          }
+        }
+      }
+
+    }
+
+  }
+  #endregion
+
 }
 
-public sealed partial class ConnectionCreateRequest : pb::IMessage<ConnectionCreateRequest> {
-  private static readonly pb::MessageParser<ConnectionCreateRequest> _parser = new pb::MessageParser<ConnectionCreateRequest>(() => new ConnectionCreateRequest());
+public sealed partial class ConnectionRequest : pb::IMessage<ConnectionRequest> {
+  private static readonly pb::MessageParser<ConnectionRequest> _parser = new pb::MessageParser<ConnectionRequest>(() => new ConnectionRequest());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pb::MessageParser<ConnectionCreateRequest> Parser { get { return _parser; } }
+  public static pb::MessageParser<ConnectionRequest> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
@@ -318,22 +489,22 @@ public sealed partial class ConnectionCreateRequest : pb::IMessage<ConnectionCre
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public ConnectionCreateRequest() {
+  public ConnectionRequest() {
     OnConstruction();
   }
 
   partial void OnConstruction();
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public ConnectionCreateRequest(ConnectionCreateRequest other) : this() {
+  public ConnectionRequest(ConnectionRequest other) : this() {
     did_ = other.did_;
     nonce_ = other.nonce_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public ConnectionCreateRequest Clone() {
-    return new ConnectionCreateRequest(this);
+  public ConnectionRequest Clone() {
+    return new ConnectionRequest(this);
   }
 
   /// <summary>Field number for the "did" field.</summary>
@@ -360,11 +531,11 @@ public sealed partial class ConnectionCreateRequest : pb::IMessage<ConnectionCre
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
-    return Equals(other as ConnectionCreateRequest);
+    return Equals(other as ConnectionRequest);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(ConnectionCreateRequest other) {
+  public bool Equals(ConnectionRequest other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
@@ -423,7 +594,7 @@ public sealed partial class ConnectionCreateRequest : pb::IMessage<ConnectionCre
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(ConnectionCreateRequest other) {
+  public void MergeFrom(ConnectionRequest other) {
     if (other == null) {
       return;
     }
@@ -458,11 +629,11 @@ public sealed partial class ConnectionCreateRequest : pb::IMessage<ConnectionCre
 
 }
 
-public sealed partial class ConnectionCreateResponse : pb::IMessage<ConnectionCreateResponse> {
-  private static readonly pb::MessageParser<ConnectionCreateResponse> _parser = new pb::MessageParser<ConnectionCreateResponse>(() => new ConnectionCreateResponse());
+public sealed partial class ConnectionResponse : pb::IMessage<ConnectionResponse> {
+  private static readonly pb::MessageParser<ConnectionResponse> _parser = new pb::MessageParser<ConnectionResponse>(() => new ConnectionResponse());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pb::MessageParser<ConnectionCreateResponse> Parser { get { return _parser; } }
+  public static pb::MessageParser<ConnectionResponse> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
@@ -475,28 +646,28 @@ public sealed partial class ConnectionCreateResponse : pb::IMessage<ConnectionCr
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public ConnectionCreateResponse() {
+  public ConnectionResponse() {
     OnConstruction();
   }
 
   partial void OnConstruction();
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public ConnectionCreateResponse(ConnectionCreateResponse other) : this() {
+  public ConnectionResponse(ConnectionResponse other) : this() {
     status_ = other.status_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public ConnectionCreateResponse Clone() {
-    return new ConnectionCreateResponse(this);
+  public ConnectionResponse Clone() {
+    return new ConnectionResponse(this);
   }
 
   /// <summary>Field number for the "status" field.</summary>
   public const int StatusFieldNumber = 1;
-  private global::ConnectionCreateResponse.Types.Status status_ = 0;
+  private global::ConnectionResponse.Types.Status status_ = 0;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public global::ConnectionCreateResponse.Types.Status Status {
+  public global::ConnectionResponse.Types.Status Status {
     get { return status_; }
     set {
       status_ = value;
@@ -505,11 +676,11 @@ public sealed partial class ConnectionCreateResponse : pb::IMessage<ConnectionCr
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
-    return Equals(other as ConnectionCreateResponse);
+    return Equals(other as ConnectionResponse);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(ConnectionCreateResponse other) {
+  public bool Equals(ConnectionResponse other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
@@ -559,7 +730,7 @@ public sealed partial class ConnectionCreateResponse : pb::IMessage<ConnectionCr
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(ConnectionCreateResponse other) {
+  public void MergeFrom(ConnectionResponse other) {
     if (other == null) {
       return;
     }
@@ -578,7 +749,7 @@ public sealed partial class ConnectionCreateResponse : pb::IMessage<ConnectionCr
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 8: {
-          status_ = (global::ConnectionCreateResponse.Types.Status) input.ReadEnum();
+          status_ = (global::ConnectionResponse.Types.Status) input.ReadEnum();
           break;
         }
       }
@@ -586,7 +757,7 @@ public sealed partial class ConnectionCreateResponse : pb::IMessage<ConnectionCr
   }
 
   #region Nested types
-  /// <summary>Container for nested types declared in the ConnectionCreateResponse message type.</summary>
+  /// <summary>Container for nested types declared in the ConnectionResponse message type.</summary>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static partial class Types {
     public enum Status {

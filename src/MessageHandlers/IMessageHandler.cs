@@ -23,7 +23,7 @@ namespace Streetcred.AgentFramework.MessageHandlers
 		/// <returns>The message.</returns>
 		/// <param name="message">Message.</param>
 		/// <param name="context">Context.</param>
-		Task<Msg> ProcessMessage(Msg message, AgentContext context, RequestContext requestContext);
+		Task<Msg> ProcessMessage(Msg message, IdentityContext context);
 		//{
         //    foreach (var agent in Handlers)
         //        if (agent.SupportedMessageTypes().Contains(message.MessageType))

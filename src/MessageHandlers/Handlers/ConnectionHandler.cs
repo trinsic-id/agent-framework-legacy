@@ -36,8 +36,9 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The message.</returns>
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
-        /// <param name="requestContext">Request context.</param>
-        public async Task<Msg> HandleMessage(Msg msg, AgentContext context, RequestContext requestContext)
+        ///  
+
+        public async Task<Msg> HandleMessage(Msg msg, IdentityContext context)
         {
             switch (msg.MessageType)
             {
@@ -48,9 +49,9 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
                     }
                 case MessageType.ConnectionRequest:
                     {
-                        var connectionCreate = msg.Unwrap<ConnectionCreateRequest>();
+                        var connectionCreate = msg.Unwrap<ConnectionRequest>();
 
-                        var res = await ConnectionCreate(connectionCreate, requestContext.Verkey, context);
+                        var res = await ConnectionCreate(connectionCreate, context);
                         return res.Wrap(MessageType.ConnectionResponse);
                     }
             }
@@ -62,12 +63,12 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// Connections the create.
         /// </summary>
         /// <returns>The create.</returns>
-        protected virtual async Task<ConnectionCreateResponse> ConnectionCreate(ConnectionCreateRequest request, string verkey, AgentContext context)
+        protected virtual async Task<ConnectionResponse> ConnectionCreate(ConnectionRequest request, IdentityContext context)
         {
-            var req = await Ledger.BuildNymRequestAsync(context.Did, request.Did, verkey, null, null);
-            var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.Did, req);
+            var req = await Ledger.BuildNymRequestAsync(context.MyDid, request.Did, context.TheirVk, null, null);
+            var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
 
-            return new ConnectionCreateResponse { Status = ConnectionCreateResponse.Types.Status.Ok };
+            return new ConnectionResponse { Status = ConnectionResponse.Types.Status.Ok };
         }
 
         /// <summary>
@@ -75,9 +76,9 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// </summary>
         /// <returns>The send.</returns>
         /// <param name="context">Context.</param>
-        protected virtual Task<ConnectionOfferResponse> ConnectionOffer(AgentContext context)
+        protected virtual Task<ConnectionOfferResponse> ConnectionOffer(IdentityContext context)
         {
-            return Task.FromResult(new ConnectionOfferResponse { Nonce = Guid.NewGuid().ToString(), Did = context.Did });
+            return Task.FromResult(new ConnectionOfferResponse { /*Nonce = Guid.NewGuid().ToString(), Did = context.MyDid*/ });
         }
 
         /// <summary>

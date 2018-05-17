@@ -8,7 +8,7 @@ namespace Streetcred.AgentFramework.MessageHandlers
     /// <summary>
     /// Agent context.
     /// </summary>
-    public class AgentContext : IDisposable
+    public class IdentityContext : IDisposable
     {
         /// <summary>
         /// Gets or sets the pool.
@@ -34,7 +34,7 @@ namespace Streetcred.AgentFramework.MessageHandlers
         /// Gets or sets the did.
         /// </summary>
         /// <value>The did.</value>
-        public string Did
+        public string MyDid
         {
             get;
             set;
@@ -44,7 +44,7 @@ namespace Streetcred.AgentFramework.MessageHandlers
         /// Gets or sets the ver key.
         /// </summary>
         /// <value>The ver key.</value>
-        public string VerKey
+        public string MyVk
         {
             get;
             set;
@@ -54,8 +54,28 @@ namespace Streetcred.AgentFramework.MessageHandlers
         /// Gets or sets the pub key.
         /// </summary>
         /// <value>The pub key.</value>
-        public string PubKey
+        public string MyPubKey
         {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets their did.
+        /// </summary>
+        /// <value>Their did.</value>
+        public string TheirDid
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets their vk.
+        /// </summary>
+        /// <value>Their vk.</value>
+        public string TheirVk 
+        { 
             get;
             set;
         }

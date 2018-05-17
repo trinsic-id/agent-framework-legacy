@@ -34,7 +34,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The message.</returns>
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
-        public async Task<Msg> HandleMessage(Msg msg, AgentContext context, RequestContext requestContext)
+        public async Task<Msg> HandleMessage(Msg msg, IdentityContext context)
         {
             switch (msg.MessageType)
             {
@@ -69,7 +69,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The offer.</returns>
         /// <param name="offerRequest">Offer request.</param>
         /// <param name="context">Context.</param>
-        async Task<CredentialOfferResponse> CredentialOffer(CredentialOfferRequest offerRequest, AgentContext context)
+        async Task<CredentialOfferResponse> CredentialOffer(CredentialOfferRequest offerRequest, IdentityContext context)
         {
             var req = await AnonCreds.IssuerCreateCredentialOfferAsync(context.Wallet, offerRequest.CredentialDefinitionId);
 
@@ -82,7 +82,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The credential.</returns>
         /// <param name="credentialRequest">Credential request.</param>
         /// <param name="context">Context.</param>
-        async Task<CredentialResponse> Credential(CredentialRequest credentialRequest, AgentContext context)
+        async Task<CredentialResponse> Credential(CredentialRequest credentialRequest, IdentityContext context)
         {
             var req = await AnonCreds.IssuerCreateCredentialAsync(context.Wallet,
                                                                   credentialRequest.CredentialOfferJson,
@@ -91,7 +91,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
                                                                   null,
                                                                   null);
 
-            return new CredentialResponse { CredentialJson = req.CredentialJson };
+            return new CredentialResponse { };
         }
     }
 }

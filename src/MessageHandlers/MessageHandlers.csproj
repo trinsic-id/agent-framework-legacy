@@ -21,5 +21,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Messages.cs" />
+    <Compile Remove="RequestContext.cs" />
   </ItemGroup>
 </Project>

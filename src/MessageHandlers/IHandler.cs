@@ -19,6 +19,6 @@ namespace Streetcred.AgentFramework.MessageHandlers
         /// <returns>The message.</returns>
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
-        Task<Msg> HandleMessage(Msg msg, AgentContext context, RequestContext requestContext);
+        Task<Msg> HandleMessage(Msg msg, IdentityContext context);
     }
 }

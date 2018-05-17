@@ -5,7 +5,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
 {
     public class VerifierHandler : IHandler
     {
-        public Task<Msg> HandleMessage(Msg msg, AgentContext context, RequestContext requestContext)
+        public Task<Msg> HandleMessage(Msg msg, IdentityContext contextt)
         {
             throw new NotImplementedException();
         }

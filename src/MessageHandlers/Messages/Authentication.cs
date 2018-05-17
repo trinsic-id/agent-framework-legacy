@@ -25,7 +25,7 @@ public static partial class AuthenticationReflection {
           "ChRhdXRoZW50aWNhdGlvbi5wcm90byIgCh5BdXRoZW50aWNhdGlvbkNoYWxs",
           "ZW5nZVJlcXVlc3QinAEKH0F1dGhlbnRpY2F0aW9uQ2hhbGxlbmdlUmVzcG9u",
           "c2USPQoJY2hhbGxlbmdlGAEgASgLMiouQXV0aGVudGljYXRpb25DaGFsbGVu",
-          "Z2VSZXNwb25zZS5DaGFsbGVuZ2USEQoJc2lnbmF0dXJlGAMgASgMGicKCUNo",
+          "Z2VSZXNwb25zZS5DaGFsbGVuZ2USEQoJc2lnbmF0dXJlGAIgASgMGicKCUNo",
           "YWxsZW5nZRILCgNkaWQYASABKAkSDQoFbm9uY2UYAiABKAkiNQoVQXV0aGVu",
           "dGljYXRpb25SZXF1ZXN0Eg0KBW5vbmNlGAEgASgJEg0KBXRva2VuGAIgASgJ",
           "IhgKFkF1dGhlbnRpY2F0aW9uUmVzcG9uc2ViBnByb3RvMw=="));
@@ -190,7 +190,7 @@ public sealed partial class AuthenticationChallengeResponse : pb::IMessage<Authe
   }
 
   /// <summary>Field number for the "signature" field.</summary>
-  public const int SignatureFieldNumber = 3;
+  public const int SignatureFieldNumber = 2;
   private pb::ByteString signature_ = pb::ByteString.Empty;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public pb::ByteString Signature {
@@ -241,7 +241,7 @@ public sealed partial class AuthenticationChallengeResponse : pb::IMessage<Authe
       output.WriteMessage(Challenge);
     }
     if (Signature.Length != 0) {
-      output.WriteRawTag(26);
+      output.WriteRawTag(18);
       output.WriteBytes(Signature);
     }
     if (_unknownFields != null) {
@@ -296,7 +296,7 @@ public sealed partial class AuthenticationChallengeResponse : pb::IMessage<Authe
           input.ReadMessage(challenge_);
           break;
         }
-        case 26: {
+        case 18: {
           Signature = input.ReadBytes();
           break;
         }

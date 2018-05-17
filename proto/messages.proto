@@ -3,15 +3,13 @@ syntax = "proto3";
 message Msg {
     MessageType message_type = 1;
     bytes content = 2;
-
-    // represents the target did the message is intended for. the message will may be encrypted using this did ver keys
-    // this field is user by cloud agents to route the message to the appropriate agent
-    string targetDid = 3;
+    string signerDid = 3;
+    string signature = 4;
 }
 
 enum MessageType {
-    DEFAULT = 0;
-    AGENT_CREDENTIAL = 1;
+    UNKNOWN = 0;
+    AGENT_ATTESTATION = 1;
 
     CONNECTION_OFFER_REQUEST = 100;
     CONNECTION_OFFER_RESPONSE = 101;
@@ -50,14 +48,14 @@ enum MessageType {
     REGISTER_ISSUER_RESPONSE = 1001;
 }
 
-message AgentCredential {
-    enum CredentialType {
+message AgentAttestation {
+    enum AttestationType {
         BEARER_TOKEN = 0;
         VERIFICATION_RESULT = 1;
     }
 
     string token = 1;
-    CredentialType type = 2;
+    AttestationType type = 2;
 }
 
 message EndpointSendRequest {

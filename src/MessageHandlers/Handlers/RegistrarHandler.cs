@@ -12,7 +12,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The message.</returns>
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
-        public async Task<Msg> HandleMessage(Msg msg, AgentContext context, RequestContext requestContext)
+        public async Task<Msg> HandleMessage(Msg msg, IdentityContext context)
         {
             switch (msg.MessageType)
             {
@@ -33,10 +33,10 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The nym create.</returns>
         /// <param name="nymCreate">Nym create.</param>
         /// <param name="context">Context.</param>
-        async Task<AgentNymCreateResponse> AgentNymCreate(AgentNymCreateRequest nymCreate, AgentContext context)
+        async Task<AgentNymCreateResponse> AgentNymCreate(AgentNymCreateRequest nymCreate, IdentityContext context)
         {
-            var req = await Ledger.BuildNymRequestAsync(context.Did, nymCreate.Did, nymCreate.Verkey, null, "TRUST_ANCHOR");
-            var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.Did, req);
+            var req = await Ledger.BuildNymRequestAsync(context.MyDid, nymCreate.Did, nymCreate.Verkey, null, "TRUST_ANCHOR");
+            var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
 
             return new AgentNymCreateResponse { Status = Status.Ok };
         }

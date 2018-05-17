@@ -27,16 +27,21 @@ public static partial class CredentialReflection {
           "YWxPZmZlclJlc3BvbnNlEh0KFWNyZWRlbnRpYWxfb2ZmZXJfanNvbhgBIAEo",
           "CSJzChFDcmVkZW50aWFsUmVxdWVzdBIdChVjcmVkZW50aWFsX29mZmVyX2pz",
           "b24YASABKAkSHwoXY3JlZGVudGlhbF9yZXF1ZXN0X2pzb24YAiABKAkSHgoW",
-          "Y3JlZGVudGlhbF92YWx1ZXNfanNvbhgDIAEoCSJEChJDcmVkZW50aWFsUmVz",
-          "cG9uc2USFwoPY3JlZGVudGlhbF9qc29uGAEgASgJEhUKDXJldm9jYXRpb25f",
-          "aWQYAiABKAliBnByb3RvMw=="));
+          "Y3JlZGVudGlhbF92YWx1ZXNfanNvbhgDIAEoCSIUChJDcmVkZW50aWFsUmVz",
+          "cG9uc2UiewoZQ3JlZGVudGlhbElzc3VhbmNlUmVxdWVzdBIdChVjcmVkZW50",
+          "aWFsX29mZmVyX2pzb24YASABKAkSHwoXY3JlZGVudGlhbF9yZXF1ZXN0X2pz",
+          "b24YAiABKAkSHgoWY3JlZGVudGlhbF92YWx1ZXNfanNvbhgDIAEoCSJMChpD",
+          "cmVkZW50aWFsSXNzdWFuY2VSZXNwb25zZRIXCg9jcmVkZW50aWFsX2pzb24Y",
+          "ASABKAkSFQoNcmV2b2NhdGlvbl9pZBgCIAEoCWIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::CredentialOfferRequest), global::CredentialOfferRequest.Parser, new[]{ "CredentialDefinitionId" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::CredentialOfferResponse), global::CredentialOfferResponse.Parser, new[]{ "CredentialOfferJson" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::CredentialRequest), global::CredentialRequest.Parser, new[]{ "CredentialOfferJson", "CredentialRequestJson", "CredentialValuesJson" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::CredentialResponse), global::CredentialResponse.Parser, new[]{ "CredentialJson", "RevocationId" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::CredentialResponse), global::CredentialResponse.Parser, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::CredentialIssuanceRequest), global::CredentialIssuanceRequest.Parser, new[]{ "CredentialOfferJson", "CredentialRequestJson", "CredentialValuesJson" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::CredentialIssuanceResponse), global::CredentialIssuanceResponse.Parser, new[]{ "CredentialJson", "RevocationId" }, null, null, null)
         }));
   }
   #endregion
@@ -511,14 +516,300 @@ public sealed partial class CredentialResponse : pb::IMessage<CredentialResponse
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public CredentialResponse(CredentialResponse other) : this() {
-    credentialJson_ = other.credentialJson_;
-    revocationId_ = other.revocationId_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public CredentialResponse Clone() {
     return new CredentialResponse(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as CredentialResponse);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(CredentialResponse other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(CredentialResponse other) {
+    if (other == null) {
+      return;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+      }
+    }
+  }
+
+}
+
+public sealed partial class CredentialIssuanceRequest : pb::IMessage<CredentialIssuanceRequest> {
+  private static readonly pb::MessageParser<CredentialIssuanceRequest> _parser = new pb::MessageParser<CredentialIssuanceRequest>(() => new CredentialIssuanceRequest());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<CredentialIssuanceRequest> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::CredentialReflection.Descriptor.MessageTypes[4]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public CredentialIssuanceRequest() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public CredentialIssuanceRequest(CredentialIssuanceRequest other) : this() {
+    credentialOfferJson_ = other.credentialOfferJson_;
+    credentialRequestJson_ = other.credentialRequestJson_;
+    credentialValuesJson_ = other.credentialValuesJson_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public CredentialIssuanceRequest Clone() {
+    return new CredentialIssuanceRequest(this);
+  }
+
+  /// <summary>Field number for the "credential_offer_json" field.</summary>
+  public const int CredentialOfferJsonFieldNumber = 1;
+  private string credentialOfferJson_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public string CredentialOfferJson {
+    get { return credentialOfferJson_; }
+    set {
+      credentialOfferJson_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  /// <summary>Field number for the "credential_request_json" field.</summary>
+  public const int CredentialRequestJsonFieldNumber = 2;
+  private string credentialRequestJson_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public string CredentialRequestJson {
+    get { return credentialRequestJson_; }
+    set {
+      credentialRequestJson_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  /// <summary>Field number for the "credential_values_json" field.</summary>
+  public const int CredentialValuesJsonFieldNumber = 3;
+  private string credentialValuesJson_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public string CredentialValuesJson {
+    get { return credentialValuesJson_; }
+    set {
+      credentialValuesJson_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as CredentialIssuanceRequest);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(CredentialIssuanceRequest other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (CredentialOfferJson != other.CredentialOfferJson) return false;
+    if (CredentialRequestJson != other.CredentialRequestJson) return false;
+    if (CredentialValuesJson != other.CredentialValuesJson) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (CredentialOfferJson.Length != 0) hash ^= CredentialOfferJson.GetHashCode();
+    if (CredentialRequestJson.Length != 0) hash ^= CredentialRequestJson.GetHashCode();
+    if (CredentialValuesJson.Length != 0) hash ^= CredentialValuesJson.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (CredentialOfferJson.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteString(CredentialOfferJson);
+    }
+    if (CredentialRequestJson.Length != 0) {
+      output.WriteRawTag(18);
+      output.WriteString(CredentialRequestJson);
+    }
+    if (CredentialValuesJson.Length != 0) {
+      output.WriteRawTag(26);
+      output.WriteString(CredentialValuesJson);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (CredentialOfferJson.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(CredentialOfferJson);
+    }
+    if (CredentialRequestJson.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(CredentialRequestJson);
+    }
+    if (CredentialValuesJson.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(CredentialValuesJson);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(CredentialIssuanceRequest other) {
+    if (other == null) {
+      return;
+    }
+    if (other.CredentialOfferJson.Length != 0) {
+      CredentialOfferJson = other.CredentialOfferJson;
+    }
+    if (other.CredentialRequestJson.Length != 0) {
+      CredentialRequestJson = other.CredentialRequestJson;
+    }
+    if (other.CredentialValuesJson.Length != 0) {
+      CredentialValuesJson = other.CredentialValuesJson;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10: {
+          CredentialOfferJson = input.ReadString();
+          break;
+        }
+        case 18: {
+          CredentialRequestJson = input.ReadString();
+          break;
+        }
+        case 26: {
+          CredentialValuesJson = input.ReadString();
+          break;
+        }
+      }
+    }
+  }
+
+}
+
+public sealed partial class CredentialIssuanceResponse : pb::IMessage<CredentialIssuanceResponse> {
+  private static readonly pb::MessageParser<CredentialIssuanceResponse> _parser = new pb::MessageParser<CredentialIssuanceResponse>(() => new CredentialIssuanceResponse());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<CredentialIssuanceResponse> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::CredentialReflection.Descriptor.MessageTypes[5]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public CredentialIssuanceResponse() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public CredentialIssuanceResponse(CredentialIssuanceResponse other) : this() {
+    credentialJson_ = other.credentialJson_;
+    revocationId_ = other.revocationId_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public CredentialIssuanceResponse Clone() {
+    return new CredentialIssuanceResponse(this);
   }
 
   /// <summary>Field number for the "credential_json" field.</summary>
@@ -545,11 +836,11 @@ public sealed partial class CredentialResponse : pb::IMessage<CredentialResponse
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
-    return Equals(other as CredentialResponse);
+    return Equals(other as CredentialIssuanceResponse);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(CredentialResponse other) {
+  public bool Equals(CredentialIssuanceResponse other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
@@ -608,7 +899,7 @@ public sealed partial class CredentialResponse : pb::IMessage<CredentialResponse
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(CredentialResponse other) {
+  public void MergeFrom(CredentialIssuanceResponse other) {
     if (other == null) {
       return;
     }
