@@ -65,7 +65,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The create.</returns>
         protected virtual async Task<ConnectionResponse> ConnectionCreate(ConnectionRequest request, IdentityContext context)
         {
-            var req = await Ledger.BuildNymRequestAsync(context.MyDid, request.Did, context.TheirVk, null, null);
+            var req = await Ledger.BuildNymRequestAsync(context.MyDid, context.TheirDid, context.TheirVk, null, null);
             var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
 
             return new ConnectionResponse { Status = ConnectionResponse.Types.Status.Ok };
@@ -78,7 +78,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <param name="context">Context.</param>
         protected virtual Task<ConnectionOfferResponse> ConnectionOffer(IdentityContext context)
         {
-            return Task.FromResult(new ConnectionOfferResponse { /*Nonce = Guid.NewGuid().ToString(), Did = context.MyDid*/ });
+            return Task.FromResult(new ConnectionOfferResponse { Nonce = Guid.NewGuid().ToString().ToLowerInvariant() });
         }
 
         /// <summary>

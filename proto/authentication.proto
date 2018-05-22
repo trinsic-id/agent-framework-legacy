@@ -14,8 +14,8 @@ message AuthenticationChallengeResponse {
 
 message AuthenticationRequest {
     string nonce = 1;
-    string token = 2;
 }
 
 message AuthenticationResponse {
+    string token = 1;
 }

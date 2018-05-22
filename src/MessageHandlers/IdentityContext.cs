@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Indy.PoolApi;
 using Hyperledger.Indy.WalletApi;
@@ -10,6 +11,14 @@ namespace Streetcred.AgentFramework.MessageHandlers
     /// </summary>
     public class IdentityContext : IDisposable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Streetcred.AgentFramework.MessageHandlers.IdentityContext"/> class.
+        /// </summary>
+        public IdentityContext()
+        {
+            State = new Dictionary<string, object>();
+        }
+
         /// <summary>
         /// Gets or sets the pool.
         /// </summary>
@@ -76,6 +85,16 @@ namespace Streetcred.AgentFramework.MessageHandlers
         /// <value>Their vk.</value>
         public string TheirVk 
         { 
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Dictionary used to pass object state down the pipeline
+        /// </summary>
+        /// <value>The state.</value>
+        public IDictionary<string, object> State
+        {
             get;
             set;
         }

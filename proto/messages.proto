@@ -3,8 +3,8 @@ syntax = "proto3";
 message Msg {
     MessageType message_type = 1;
     bytes content = 2;
-    string signerDid = 3;
-    string signature = 4;
+    bytes signature = 3;
+    string signerDid = 4;
 }
 
 enum MessageType {

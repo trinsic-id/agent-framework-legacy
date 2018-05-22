@@ -26,16 +26,16 @@ public static partial class AuthenticationReflection {
           "ZW5nZVJlcXVlc3QinAEKH0F1dGhlbnRpY2F0aW9uQ2hhbGxlbmdlUmVzcG9u",
           "c2USPQoJY2hhbGxlbmdlGAEgASgLMiouQXV0aGVudGljYXRpb25DaGFsbGVu",
           "Z2VSZXNwb25zZS5DaGFsbGVuZ2USEQoJc2lnbmF0dXJlGAIgASgMGicKCUNo",
-          "YWxsZW5nZRILCgNkaWQYASABKAkSDQoFbm9uY2UYAiABKAkiNQoVQXV0aGVu",
-          "dGljYXRpb25SZXF1ZXN0Eg0KBW5vbmNlGAEgASgJEg0KBXRva2VuGAIgASgJ",
-          "IhgKFkF1dGhlbnRpY2F0aW9uUmVzcG9uc2ViBnByb3RvMw=="));
+          "YWxsZW5nZRILCgNkaWQYASABKAkSDQoFbm9uY2UYAiABKAkiJgoVQXV0aGVu",
+          "dGljYXRpb25SZXF1ZXN0Eg0KBW5vbmNlGAEgASgJIicKFkF1dGhlbnRpY2F0",
+          "aW9uUmVzcG9uc2USDQoFdG9rZW4YASABKAliBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::AuthenticationChallengeRequest), global::AuthenticationChallengeRequest.Parser, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::AuthenticationChallengeResponse), global::AuthenticationChallengeResponse.Parser, new[]{ "Challenge", "Signature" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AuthenticationChallengeResponse.Types.Challenge), global::AuthenticationChallengeResponse.Types.Challenge.Parser, new[]{ "Did", "Nonce" }, null, null, null)}),
-          new pbr::GeneratedClrTypeInfo(typeof(global::AuthenticationRequest), global::AuthenticationRequest.Parser, new[]{ "Nonce", "Token" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::AuthenticationResponse), global::AuthenticationResponse.Parser, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::AuthenticationRequest), global::AuthenticationRequest.Parser, new[]{ "Nonce" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::AuthenticationResponse), global::AuthenticationResponse.Parser, new[]{ "Token" }, null, null, null)
         }));
   }
   #endregion
@@ -496,7 +496,6 @@ public sealed partial class AuthenticationRequest : pb::IMessage<AuthenticationR
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public AuthenticationRequest(AuthenticationRequest other) : this() {
     nonce_ = other.nonce_;
-    token_ = other.token_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -516,17 +515,6 @@ public sealed partial class AuthenticationRequest : pb::IMessage<AuthenticationR
     }
   }
 
-  /// <summary>Field number for the "token" field.</summary>
-  public const int TokenFieldNumber = 2;
-  private string token_ = "";
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public string Token {
-    get { return token_; }
-    set {
-      token_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-    }
-  }
-
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
     return Equals(other as AuthenticationRequest);
@@ -541,7 +529,6 @@ public sealed partial class AuthenticationRequest : pb::IMessage<AuthenticationR
       return true;
     }
     if (Nonce != other.Nonce) return false;
-    if (Token != other.Token) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -549,7 +536,6 @@ public sealed partial class AuthenticationRequest : pb::IMessage<AuthenticationR
   public override int GetHashCode() {
     int hash = 1;
     if (Nonce.Length != 0) hash ^= Nonce.GetHashCode();
-    if (Token.Length != 0) hash ^= Token.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -567,10 +553,6 @@ public sealed partial class AuthenticationRequest : pb::IMessage<AuthenticationR
       output.WriteRawTag(10);
       output.WriteString(Nonce);
     }
-    if (Token.Length != 0) {
-      output.WriteRawTag(18);
-      output.WriteString(Token);
-    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -581,9 +563,6 @@ public sealed partial class AuthenticationRequest : pb::IMessage<AuthenticationR
     int size = 0;
     if (Nonce.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Nonce);
-    }
-    if (Token.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -599,9 +578,6 @@ public sealed partial class AuthenticationRequest : pb::IMessage<AuthenticationR
     if (other.Nonce.Length != 0) {
       Nonce = other.Nonce;
     }
-    if (other.Token.Length != 0) {
-      Token = other.Token;
-    }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
 
@@ -615,10 +591,6 @@ public sealed partial class AuthenticationRequest : pb::IMessage<AuthenticationR
           break;
         case 10: {
           Nonce = input.ReadString();
-          break;
-        }
-        case 18: {
-          Token = input.ReadString();
           break;
         }
       }
@@ -652,12 +624,24 @@ public sealed partial class AuthenticationResponse : pb::IMessage<Authentication
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public AuthenticationResponse(AuthenticationResponse other) : this() {
+    token_ = other.token_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public AuthenticationResponse Clone() {
     return new AuthenticationResponse(this);
+  }
+
+  /// <summary>Field number for the "token" field.</summary>
+  public const int TokenFieldNumber = 1;
+  private string token_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public string Token {
+    get { return token_; }
+    set {
+      token_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -673,12 +657,14 @@ public sealed partial class AuthenticationResponse : pb::IMessage<Authentication
     if (ReferenceEquals(other, this)) {
       return true;
     }
+    if (Token != other.Token) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override int GetHashCode() {
     int hash = 1;
+    if (Token.Length != 0) hash ^= Token.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -692,6 +678,10 @@ public sealed partial class AuthenticationResponse : pb::IMessage<Authentication
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public void WriteTo(pb::CodedOutputStream output) {
+    if (Token.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteString(Token);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -700,6 +690,9 @@ public sealed partial class AuthenticationResponse : pb::IMessage<Authentication
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public int CalculateSize() {
     int size = 0;
+    if (Token.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
+    }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
     }
@@ -710,6 +703,9 @@ public sealed partial class AuthenticationResponse : pb::IMessage<Authentication
   public void MergeFrom(AuthenticationResponse other) {
     if (other == null) {
       return;
+    }
+    if (other.Token.Length != 0) {
+      Token = other.Token;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -722,6 +718,10 @@ public sealed partial class AuthenticationResponse : pb::IMessage<Authentication
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
+        case 10: {
+          Token = input.ReadString();
+          break;
+        }
       }
     }
   }

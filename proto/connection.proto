@@ -4,16 +4,11 @@ message ConnectionOfferRequest {
 }
 
 message ConnectionOfferResponse {
-    message Offer { 
-        string did = 1;
-        string nonce = 2;
-    }
-    Offer offer = 1;
+    string nonce = 1;
     bytes signature = 2;
 }
 
 message ConnectionRequest {
-    string did = 1;
     string nonce = 3;
 }
 

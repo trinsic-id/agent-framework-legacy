@@ -22,39 +22,40 @@ public static partial class MessagesReflection {
   static MessagesReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "Cg5tZXNzYWdlcy5wcm90byJgCgNNc2cSIgoMbWVzc2FnZV90eXBlGAEgASgO",
-          "MgwuTWVzc2FnZVR5cGUSDwoHY29udGVudBgCIAEoDBIRCglzaWduZXJEaWQY",
-          "AyABKAkSEQoJc2lnbmF0dXJlGAQgASgJIpABChBBZ2VudEF0dGVzdGF0aW9u",
-          "Eg0KBXRva2VuGAEgASgJEi8KBHR5cGUYAiABKA4yIS5BZ2VudEF0dGVzdGF0",
-          "aW9uLkF0dGVzdGF0aW9uVHlwZSI8Cg9BdHRlc3RhdGlvblR5cGUSEAoMQkVB",
-          "UkVSX1RPS0VOEAASFwoTVkVSSUZJQ0FUSU9OX1JFU1VMVBABIicKE0VuZHBv",
-          "aW50U2VuZFJlcXVlc3QSEAoIZW5kcG9pbnQYASABKAkiNAoVQWdlbnROeW1D",
-          "cmVhdGVSZXF1ZXN0EgsKA2RpZBgBIAEoCRIOCgZ2ZXJrZXkYAiABKAkiMQoW",
-          "QWdlbnROeW1DcmVhdGVSZXNwb25zZRIXCgZzdGF0dXMYASABKA4yBy5TdGF0",
-          "dXMiIwoIUmVzcG9uc2USFwoGc3RhdHVzGAEgASgOMgcuU3RhdHVzKqwGCgtN",
-          "ZXNzYWdlVHlwZRILCgdVTktOT1dOEAASFQoRQUdFTlRfQVRURVNUQVRJT04Q",
-          "ARIcChhDT05ORUNUSU9OX09GRkVSX1JFUVVFU1QQZBIdChlDT05ORUNUSU9O",
-          "X09GRkVSX1JFU1BPTlNFEGUSFgoSQ09OTkVDVElPTl9SRVFVRVNUEGYSFwoT",
-          "Q09OTkVDVElPTl9SRVNQT05TRRBnEiUKIEFVVEhFTlRJQ0FUSU9OX0NIQUxM",
-          "RU5HRV9SRVFVRVNUEMgBEiYKIUFVVEhFTlRJQ0FUSU9OX0NIQUxMRU5HRV9S",
-          "RVNQT05TRRDJARIbChZBVVRIRU5USUNBVElPTl9SRVFVRVNUEMoBEhwKF0FV",
-          "VEhFTlRJQ0FUSU9OX1JFU1BPTlNFEMsBEhoKFVNDSEVNQV9DUkVBVEVfUkVR",
-          "VUVTVBCsAhIbChZTQ0hFTUFfQ1JFQVRFX1JFU1BPTlNFEK0CEikKJENSRURF",
-          "TlRJQUxfREVGSU5JVElPTl9DUkVBVEVfUkVRVUVTVBDeAhIqCiVDUkVERU5U",
-          "SUFMX0RFRklOSVRJT05fQ1JFQVRFX1JFU1BPTlNFEN8CEhkKFUVORFBPSU5U",
-          "X1NFTkRfUkVRVUVTVBAJEh0KGENSRURFTlRJQUxfT0ZGRVJfUkVRVUVTVBCQ",
-          "AxIeChlDUkVERU5USUFMX09GRkVSX1JFU1BPTlNFEJEDEhcKEkNSRURFTlRJ",
-          "QUxfUkVRVUVTVBCSAxIYChNDUkVERU5USUFMX1JFU1BPTlNFEJMDEhkKFFBS",
-          "T09GX0NSRUFURV9SRVFVRVNUEPQDEhoKFVBST09GX0NSRUFURV9SRVNQT05T",
-          "RRD1AxIXChJQUk9PRl9TRU5EX1JFUVVFU1QQ9gMSGAoTUFJPT0ZfU0VORF9S",
-          "RVNQT05TRRD3AxIdChhBR0VOVF9OWU1fQ1JFQVRFX1JFUVVFU1QQ2AQSHgoZ",
-          "QUdFTlRfTllNX0NSRUFURV9SRVNQT05TRRDZBBIcChdSRUdJU1RFUl9JU1NV",
-          "RVJfUkVRVUVTVBDoBxIdChhSRUdJU1RFUl9JU1NVRVJfUkVTUE9OU0UQ6Qcq",
-          "GwoGU3RhdHVzEgYKAk9LEAASCQoFRVJST1IQAWIGcHJvdG8z"));
+          "Cg5tZXNzYWdlcy5wcm90byJ4CgNNc2cSIgoMbWVzc2FnZV90eXBlGAEgASgO",
+          "MgwuTWVzc2FnZVR5cGUSDwoHY29udGVudBgCIAEoDBIRCglzaWduYXR1cmUY",
+          "AyABKAwSEQoJc2lnbmVyRGlkGAQgASgJEhYKDmNvcnJlbGF0aW9uX2lkGAUg",
+          "ASgJIpABChBBZ2VudEF0dGVzdGF0aW9uEg0KBXRva2VuGAEgASgJEi8KBHR5",
+          "cGUYAiABKA4yIS5BZ2VudEF0dGVzdGF0aW9uLkF0dGVzdGF0aW9uVHlwZSI8",
+          "Cg9BdHRlc3RhdGlvblR5cGUSEAoMQkVBUkVSX1RPS0VOEAASFwoTVkVSSUZJ",
+          "Q0FUSU9OX1JFU1VMVBABIicKE0VuZHBvaW50U2VuZFJlcXVlc3QSEAoIZW5k",
+          "cG9pbnQYASABKAkiNAoVQWdlbnROeW1DcmVhdGVSZXF1ZXN0EgsKA2RpZBgB",
+          "IAEoCRIOCgZ2ZXJrZXkYAiABKAkiMQoWQWdlbnROeW1DcmVhdGVSZXNwb25z",
+          "ZRIXCgZzdGF0dXMYASABKA4yBy5TdGF0dXMiIwoIUmVzcG9uc2USFwoGc3Rh",
+          "dHVzGAEgASgOMgcuU3RhdHVzKqwGCgtNZXNzYWdlVHlwZRILCgdVTktOT1dO",
+          "EAASFQoRQUdFTlRfQVRURVNUQVRJT04QARIcChhDT05ORUNUSU9OX09GRkVS",
+          "X1JFUVVFU1QQZBIdChlDT05ORUNUSU9OX09GRkVSX1JFU1BPTlNFEGUSFgoS",
+          "Q09OTkVDVElPTl9SRVFVRVNUEGYSFwoTQ09OTkVDVElPTl9SRVNQT05TRRBn",
+          "EiUKIEFVVEhFTlRJQ0FUSU9OX0NIQUxMRU5HRV9SRVFVRVNUEMgBEiYKIUFV",
+          "VEhFTlRJQ0FUSU9OX0NIQUxMRU5HRV9SRVNQT05TRRDJARIbChZBVVRIRU5U",
+          "SUNBVElPTl9SRVFVRVNUEMoBEhwKF0FVVEhFTlRJQ0FUSU9OX1JFU1BPTlNF",
+          "EMsBEhoKFVNDSEVNQV9DUkVBVEVfUkVRVUVTVBCsAhIbChZTQ0hFTUFfQ1JF",
+          "QVRFX1JFU1BPTlNFEK0CEikKJENSRURFTlRJQUxfREVGSU5JVElPTl9DUkVB",
+          "VEVfUkVRVUVTVBDeAhIqCiVDUkVERU5USUFMX0RFRklOSVRJT05fQ1JFQVRF",
+          "X1JFU1BPTlNFEN8CEhkKFUVORFBPSU5UX1NFTkRfUkVRVUVTVBAJEh0KGENS",
+          "RURFTlRJQUxfT0ZGRVJfUkVRVUVTVBCQAxIeChlDUkVERU5USUFMX09GRkVS",
+          "X1JFU1BPTlNFEJEDEhcKEkNSRURFTlRJQUxfUkVRVUVTVBCSAxIYChNDUkVE",
+          "RU5USUFMX1JFU1BPTlNFEJMDEhkKFFBST09GX0NSRUFURV9SRVFVRVNUEPQD",
+          "EhoKFVBST09GX0NSRUFURV9SRVNQT05TRRD1AxIXChJQUk9PRl9TRU5EX1JF",
+          "UVVFU1QQ9gMSGAoTUFJPT0ZfU0VORF9SRVNQT05TRRD3AxIdChhBR0VOVF9O",
+          "WU1fQ1JFQVRFX1JFUVVFU1QQ2AQSHgoZQUdFTlRfTllNX0NSRUFURV9SRVNQ",
+          "T05TRRDZBBIcChdSRUdJU1RFUl9JU1NVRVJfUkVRVUVTVBDoBxIdChhSRUdJ",
+          "U1RFUl9JU1NVRVJfUkVTUE9OU0UQ6QcqGwoGU3RhdHVzEgYKAk9LEAASCQoF",
+          "RVJST1IQAWIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(new[] {typeof(global::MessageType), typeof(global::Status), }, new pbr::GeneratedClrTypeInfo[] {
-          new pbr::GeneratedClrTypeInfo(typeof(global::Msg), global::Msg.Parser, new[]{ "MessageType", "Content", "SignerDid", "Signature" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::Msg), global::Msg.Parser, new[]{ "MessageType", "Content", "Signature", "SignerDid", "CorrelationId" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::AgentAttestation), global::AgentAttestation.Parser, new[]{ "Token", "Type" }, null, new[]{ typeof(global::AgentAttestation.Types.AttestationType) }, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::EndpointSendRequest), global::EndpointSendRequest.Parser, new[]{ "Endpoint" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::AgentNymCreateRequest), global::AgentNymCreateRequest.Parser, new[]{ "Did", "Verkey" }, null, null, null),
@@ -131,8 +132,9 @@ public sealed partial class Msg : pb::IMessage<Msg> {
   public Msg(Msg other) : this() {
     messageType_ = other.messageType_;
     content_ = other.content_;
-    signerDid_ = other.signerDid_;
     signature_ = other.signature_;
+    signerDid_ = other.signerDid_;
+    correlationId_ = other.correlationId_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -163,8 +165,19 @@ public sealed partial class Msg : pb::IMessage<Msg> {
     }
   }
 
+  /// <summary>Field number for the "signature" field.</summary>
+  public const int SignatureFieldNumber = 3;
+  private pb::ByteString signature_ = pb::ByteString.Empty;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pb::ByteString Signature {
+    get { return signature_; }
+    set {
+      signature_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
   /// <summary>Field number for the "signerDid" field.</summary>
-  public const int SignerDidFieldNumber = 3;
+  public const int SignerDidFieldNumber = 4;
   private string signerDid_ = "";
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public string SignerDid {
@@ -174,14 +187,19 @@ public sealed partial class Msg : pb::IMessage<Msg> {
     }
   }
 
-  /// <summary>Field number for the "signature" field.</summary>
-  public const int SignatureFieldNumber = 4;
-  private string signature_ = "";
+  /// <summary>Field number for the "correlation_id" field.</summary>
+  public const int CorrelationIdFieldNumber = 5;
+  private string correlationId_ = "";
+  /// <summary>
+  /// Used to match request/response in scenarios where
+  /// communication is decoupled 
+  /// e.g. websocket -> agent -> mobile app -> agent -> websocket 
+  /// </summary>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public string Signature {
-    get { return signature_; }
+  public string CorrelationId {
+    get { return correlationId_; }
     set {
-      signature_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      correlationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
     }
   }
 
@@ -200,8 +218,9 @@ public sealed partial class Msg : pb::IMessage<Msg> {
     }
     if (MessageType != other.MessageType) return false;
     if (Content != other.Content) return false;
-    if (SignerDid != other.SignerDid) return false;
     if (Signature != other.Signature) return false;
+    if (SignerDid != other.SignerDid) return false;
+    if (CorrelationId != other.CorrelationId) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -210,8 +229,9 @@ public sealed partial class Msg : pb::IMessage<Msg> {
     int hash = 1;
     if (MessageType != 0) hash ^= MessageType.GetHashCode();
     if (Content.Length != 0) hash ^= Content.GetHashCode();
-    if (SignerDid.Length != 0) hash ^= SignerDid.GetHashCode();
     if (Signature.Length != 0) hash ^= Signature.GetHashCode();
+    if (SignerDid.Length != 0) hash ^= SignerDid.GetHashCode();
+    if (CorrelationId.Length != 0) hash ^= CorrelationId.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -233,13 +253,17 @@ public sealed partial class Msg : pb::IMessage<Msg> {
       output.WriteRawTag(18);
       output.WriteBytes(Content);
     }
-    if (SignerDid.Length != 0) {
+    if (Signature.Length != 0) {
       output.WriteRawTag(26);
+      output.WriteBytes(Signature);
+    }
+    if (SignerDid.Length != 0) {
+      output.WriteRawTag(34);
       output.WriteString(SignerDid);
     }
-    if (Signature.Length != 0) {
-      output.WriteRawTag(34);
-      output.WriteString(Signature);
+    if (CorrelationId.Length != 0) {
+      output.WriteRawTag(42);
+      output.WriteString(CorrelationId);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -255,11 +279,14 @@ public sealed partial class Msg : pb::IMessage<Msg> {
     if (Content.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeBytesSize(Content);
     }
+    if (Signature.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Signature);
+    }
     if (SignerDid.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(SignerDid);
     }
-    if (Signature.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Signature);
+    if (CorrelationId.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(CorrelationId);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -278,11 +305,14 @@ public sealed partial class Msg : pb::IMessage<Msg> {
     if (other.Content.Length != 0) {
       Content = other.Content;
     }
+    if (other.Signature.Length != 0) {
+      Signature = other.Signature;
+    }
     if (other.SignerDid.Length != 0) {
       SignerDid = other.SignerDid;
     }
-    if (other.Signature.Length != 0) {
-      Signature = other.Signature;
+    if (other.CorrelationId.Length != 0) {
+      CorrelationId = other.CorrelationId;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -304,11 +334,15 @@ public sealed partial class Msg : pb::IMessage<Msg> {
           break;
         }
         case 26: {
-          SignerDid = input.ReadString();
+          Signature = input.ReadBytes();
           break;
         }
         case 34: {
-          Signature = input.ReadString();
+          SignerDid = input.ReadString();
+          break;
+        }
+        case 42: {
+          CorrelationId = input.ReadString();
           break;
         }
       }
