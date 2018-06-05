@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>AgentFramework.MessageHandlers</AssemblyName>
+    <RootNamespace>AgentFramework.MessageHandlers</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Handlers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Hyperledger.Indy.Sdk">
+      <HintPath>..\..\lib\Hyperledger.Indy.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Hyperledger.Indy.Sdk">
+      <HintPath>..\..\..\lib\Hyperledger.Indy.Sdk.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Messages.cs" />
+    <Compile Remove="RequestContext.cs" />
+    <Compile Remove="Messages\Authentication.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages\Messages.csproj" />
+  </ItemGroup>
+</Project>
