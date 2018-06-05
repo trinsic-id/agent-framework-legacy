@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+option csharp_namespace = "Indy.Agent.Messages";
+
 message SchemaCreateRequest {
     string name = 1;
     string version = 2;

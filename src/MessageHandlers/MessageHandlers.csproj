@@ -2,13 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Streetcred.AgentFramework.MessageHandlers</AssemblyName>
-    <RootNamespace>Streetcred.AgentFramework.MessageHandlers</RootNamespace>
+    <AssemblyName>AgentFramework.MessageHandlers</AssemblyName>
+    <RootNamespace>AgentFramework.MessageHandlers</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Handlers\" />
-    <Folder Include="Messages\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Hyperledger.Indy.Sdk">
@@ -17,10 +16,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="Google.Protobuf" Version="3.5.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Messages.cs" />
     <Compile Remove="RequestContext.cs" />
+    <Compile Remove="Messages\Authentication.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages\Messages.csproj" />
   </ItemGroup>
 </Project>

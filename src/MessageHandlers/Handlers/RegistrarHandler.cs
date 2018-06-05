@@ -1,30 +1,33 @@
-﻿using Hyperledger.Indy.LedgerApi;
+﻿using Google.Protobuf.WellKnownTypes;
+using Hyperledger.Indy.LedgerApi;
+using Indy.Agent.Messages;
 using System;
 using System.Threading.Tasks;
 
-namespace Streetcred.AgentFramework.MessageHandlers.Handlers
+namespace AgentFramework.MessageHandlers.Handlers
 {
     public class RegistrarHandler : IHandler
     {
+
         /// <summary>
         /// Handles the message.
         /// </summary>
         /// <returns>The message.</returns>
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
-        public async Task<Msg> HandleMessage(Msg msg, IdentityContext context)
+        public async Task<Any> HandleMessage(Any msg, IdentityContext context)
         {
-            switch (msg.MessageType)
-            {
-                case MessageType.AgentNymCreateRequest:
-                    {
-                        var nymCreate = msg.Unwrap<AgentNymCreateRequest>();
+			switch (msg.TypeName())
+			{
+				case nameof(NymCreateRequest):
+					{
+						var nymCreate = msg.Unpack<NymCreateRequest>();
 
-                        var res = await AgentNymCreate(nymCreate, context);
-                        return res.Wrap(MessageType.AgentNymCreateResponse);
-                    }
-            }
-            throw new Exception("Message type not supported.");
+						var res = await NymCreate(nymCreate, context);
+						return Any.Pack(res);
+					}
+			}
+            throw new Exception($"Unsupported message type: {msg.TypeUrl}");
         }
 
         /// <summary>
@@ -33,23 +36,23 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The nym create.</returns>
         /// <param name="nymCreate">Nym create.</param>
         /// <param name="context">Context.</param>
-        async Task<AgentNymCreateResponse> AgentNymCreate(AgentNymCreateRequest nymCreate, IdentityContext context)
+        async Task<NymCreateResponse> NymCreate(NymCreateRequest nymCreate, IdentityContext context)
         {
             var req = await Ledger.BuildNymRequestAsync(context.MyDid, nymCreate.Did, nymCreate.Verkey, null, "TRUST_ANCHOR");
             var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
 
-            return new AgentNymCreateResponse { Status = Status.Ok };
+            return new NymCreateResponse();
         }
 
         /// <summary>
         /// Gets the supported message types for this handler
         /// </summary>
         /// <returns>The message types.</returns>
-        public MessageType[] SupportedMessageTypes()
+        public string[] SupportedMessageTypes()
         {
             return new[]
             {
-                MessageType.AgentNymCreateRequest
+				nameof(NymCreateRequest)
             };
         }
     }

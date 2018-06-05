@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.LedgerApi;
+using Indy.Agent.Messages;
 using Newtonsoft.Json;
 
-namespace Streetcred.AgentFramework.MessageHandlers.Handlers
+namespace AgentFramework.MessageHandlers.Handlers
 {
     public class SchemaHandler : IHandler
     {
-        readonly MessageType[] messageTypes;
+        readonly string[] messageTypes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Streetcred.Agent.Agents.Handlers.SchemaHandler"/> class.
         /// </summary>
         /// <param name="messageTypes">Message types.</param>
-		public SchemaHandler(params MessageType[] messageTypes)
+		public SchemaHandler(params string[] messageTypes)
         {
             this.messageTypes = messageTypes;
         }
@@ -23,8 +25,8 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Streetcred.Agent.Agents.Handlers.SchemaHandler"/> class.
         /// </summary>
-		public SchemaHandler() : this(MessageType.SchemaCreateRequest,
-                                      MessageType.CredentialDefinitionCreateRequest)
+		public SchemaHandler() : this(nameof(SchemaCreateRequest),
+		                              nameof(CredentialDefinitionCreateRequest))
         {
         }
 
@@ -34,23 +36,19 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The message.</returns>
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
-        public async Task<Msg> HandleMessage(Msg msg, IdentityContext context)
+        public async Task<Any> HandleMessage(Any msg, IdentityContext context)
         {
-            switch (msg.MessageType)
+			switch (msg.TypeName())
             {
-                case MessageType.SchemaCreateRequest:
+				case nameof(SchemaCreateRequest):
                     {
-                        var req = msg.Unwrap<SchemaCreateRequest>();
-
-                        var res = await CreateSchema(req, context);
-                        return res.Wrap(MessageType.SchemaCreateResponse);
+						var req = msg.Unpack<SchemaCreateRequest>();
+						return Any.Pack(await CreateSchema(req, context));
                     }
-                case MessageType.CredentialDefinitionCreateRequest:
+				case nameof(CredentialDefinitionCreateRequest):
                     {
-                        var req = msg.Unwrap<CredentialDefinitionCreateRequest>();
-
-                        var res = await CreateCredentialDefinition(req, context);
-                        return res.Wrap(MessageType.CredentialDefinitionCreateResponse);
+						var req = msg.Unpack<CredentialDefinitionCreateRequest>();
+						return Any.Pack(await CreateCredentialDefinition(req, context));
                     }
             }
             throw new Exception("Unsupported message type");
@@ -108,6 +106,6 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// Supporteds the message types.
         /// </summary>
         /// <returns>The message types.</returns>
-        public MessageType[] SupportedMessageTypes() => messageTypes;
+        public string[] SupportedMessageTypes() => messageTypes;
     }
 }

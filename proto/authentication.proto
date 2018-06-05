@@ -1,15 +1,12 @@
 syntax = "proto3";
 
+option csharp_namespace = "Indy.Agent.Messages";
+
 message AuthenticationChallengeRequest {
 }
 
 message AuthenticationChallengeResponse {
-    message Challenge { 
-        string did = 1;
-        string nonce = 2;
-    }
-    Challenge challenge = 1;
-    bytes signature = 2;
+    string nonce = 1;
 }
 
 message AuthenticationRequest {

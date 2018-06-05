@@ -1,22 +1,24 @@
 ﻿using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Hyperledger.Indy.CryptoApi;
+using Indy.Agent.Messages;
 using System;
 using System.Threading.Tasks;
 
-namespace Streetcred.AgentFramework.MessageHandlers.Handlers
+namespace AgentFramework.MessageHandlers.Handlers
 {
     /// <summary>
     /// Authentication handler.
     /// </summary>
     public class AuthenticationHandler : IHandler
     {
-        readonly MessageType[] messageTypes;
+        readonly string[] messageTypes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Streetcred.AgentFramework.Handlers.AuthenticationHandler"/> class.
         /// </summary>
         /// <param name="messageTypes">Message types.</param>
-		public AuthenticationHandler(params MessageType[] messageTypes)
+		public AuthenticationHandler(params string[] messageTypes)
         {
             this.messageTypes = messageTypes;
         }
@@ -24,8 +26,8 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Streetcred.AgentFramework.Handlers.AuthenticationHandler"/> class.
         /// </summary>
-		public AuthenticationHandler() : this(MessageType.AuthenticationRequest,
-                                              MessageType.AuthenticationChallengeRequest)
+		public AuthenticationHandler() : this(nameof(AuthenticationRequest),
+		                                      nameof(AuthenticationChallengeRequest))
         {
 
         }
@@ -37,26 +39,22 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
         ///    /// 
-
-        public virtual async Task<Msg> HandleMessage(Msg msg, IdentityContext context)
+        public virtual async Task<Any> HandleMessage(Any msg, IdentityContext context)
         {
-            switch (msg.MessageType)
+			switch (msg.TypeName())
             {
-                case MessageType.AuthenticationChallengeRequest:
+				case nameof(AuthenticationChallengeRequest):
                     {
-                        var res = await AuthenticationChallenge(context);
-                        return res.Wrap(MessageType.AuthenticationChallengeResponse);
+						return Any.Pack(await AuthenticationChallenge(context));
                     }
-                case MessageType.AuthenticationRequest:
+				case nameof(AuthenticationRequest):
                     {
-                        var authRequest = msg.Unwrap<AuthenticationRequest>();
+						var authRequest = msg.Unpack<AuthenticationRequest>();
 
-                        var res = await Authenticate(authRequest, context);
-                        return res.Wrap(MessageType.AuthenticationResponse);
+						return Any.Pack(await Authenticate(authRequest, context));
                     }
             }
-
-            throw new Exception($"Unsupported message type: {msg.MessageType}");
+			throw new Exception($"Unsupported message type: {msg.TypeUrl}");
         }
 
         /// <summary>
@@ -64,16 +62,12 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// </summary>
         /// <returns>The challenge.</returns>
         /// <param name="context">Context.</param>
-		protected virtual async Task<AuthenticationChallengeResponse> AuthenticationChallenge(IdentityContext context)
+		protected virtual Task<AuthenticationChallengeResponse> AuthenticationChallenge(IdentityContext context)
         {
-            var challenge = new AuthenticationChallengeResponse.Types.Challenge
-            {
-                Did = context.MyDid,
-                Nonce = Guid.NewGuid().ToString().ToLowerInvariant()
-            };
-            var signature = await Crypto.SignAsync(context.Wallet, context.MyVk, challenge.ToByteArray());
-
-            return new AuthenticationChallengeResponse { Challenge = challenge, Signature = ByteString.CopyFrom(signature) };
+			return Task.FromResult(new AuthenticationChallengeResponse
+			{
+				Nonce = Guid.NewGuid().ToString().ToLowerInvariant()
+			});
         }
 
         /// <summary>
@@ -93,6 +87,6 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// Supporteds the message types.
         /// </summary>
         /// <returns>The message types.</returns>
-        public MessageType[] SupportedMessageTypes() => messageTypes;
+        public string[] SupportedMessageTypes() => messageTypes;
     }
 }

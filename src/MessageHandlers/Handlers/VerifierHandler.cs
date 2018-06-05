@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
+using Indy.Agent.Messages;
 
-namespace Streetcred.AgentFramework.MessageHandlers.Handlers
+namespace AgentFramework.MessageHandlers.Handlers
 {
     public class VerifierHandler : IHandler
     {
-        public Task<Msg> HandleMessage(Msg msg, IdentityContext contextt)
+        public Task<Any> HandleMessage(Any msg, IdentityContext contextt)
         {
             throw new NotImplementedException();
         }
 
-        public MessageType[] SupportedMessageTypes()
+        public string[] SupportedMessageTypes()
         {
-			return new []
-			{
-				MessageType.ProofSendRequest,
-				MessageType.ProofCreateRequest
-			};
+			throw new NotImplementedException();
         }
     }
 }

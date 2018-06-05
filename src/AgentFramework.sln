@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageHandlers", "MessageHandlers\MessageHandlers.csproj", "{C0A0B6FA-2D77-4881-9C2F-D40B95171653}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{32C6B8E2-FC40-4251-AA7B-2A2AEF432920}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "Messages\Messages.csproj", "{E34F63C0-3A7E-4DB7-9A92-DE17ED17D756}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages.Tests", "Tests\Messages.Tests\Messages.Tests.csproj", "{E76ACB02-E7D0-469A-95D9-5D392B566DEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +19,16 @@ Global
 		{C0A0B6FA-2D77-4881-9C2F-D40B95171653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0A0B6FA-2D77-4881-9C2F-D40B95171653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0A0B6FA-2D77-4881-9C2F-D40B95171653}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E34F63C0-3A7E-4DB7-9A92-DE17ED17D756}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E34F63C0-3A7E-4DB7-9A92-DE17ED17D756}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E34F63C0-3A7E-4DB7-9A92-DE17ED17D756}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E34F63C0-3A7E-4DB7-9A92-DE17ED17D756}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E76ACB02-E7D0-469A-95D9-5D392B566DEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E76ACB02-E7D0-469A-95D9-5D392B566DEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E76ACB02-E7D0-469A-95D9-5D392B566DEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E76ACB02-E7D0-469A-95D9-5D392B566DEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E76ACB02-E7D0-469A-95D9-5D392B566DEC} = {32C6B8E2-FC40-4251-AA7B-2A2AEF432920}
 	EndGlobalSection
 EndGlobal

@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using Hyperledger.Indy.LedgerApi;
-using Streetcred.AgentFramework.MessageHandlers;
-using Streetcred.AgentFramework.MessageHandlers.Handlers;
+using Indy.Agent.Messages;
 
-namespace Streetcred.AgentFramework.MessageHandlers.Handlers
+namespace AgentFramework.MessageHandlers.Handlers
 {
     /// <summary>
     /// Connection handler.
     /// </summary>
     public class ConnectionHandler : IHandler
     {
-		readonly MessageType[] messageTypes;
+		readonly string[] messageTypes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:MessageHandlers.Handlers.ConnectionHandler"/> class.
         /// </summary>
         /// <param name="messageTypes">Message types.</param>
-		public ConnectionHandler(params MessageType[] messageTypes)
+		public ConnectionHandler(params string[] messageTypes)
         {
 			this.messageTypes = messageTypes;
 		}
@@ -25,8 +25,8 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <summary>
         /// Initializes a new instance of the <see cref="T:MessageHandlers.Handlers.ConnectionHandler"/> class.
         /// </summary>
-		public ConnectionHandler() : this(MessageType.ConnectionOfferRequest,
-		                                  MessageType.ConnectionRequest)
+		public ConnectionHandler() : this(nameof(ConnectionOfferRequest),
+		                                  nameof(ConnectionRequest))
 		{
 		}
 
@@ -34,28 +34,23 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// Handles the message.
         /// </summary>
         /// <returns>The message.</returns>
-        /// <param name="msg">Message.</param>
+        /// <param name="message">Message.</param>
         /// <param name="context">Context.</param>
-        ///  
-
-        public async Task<Msg> HandleMessage(Msg msg, IdentityContext context)
+		public async Task<Any> HandleMessage(Any message, IdentityContext context)
         {
-            switch (msg.MessageType)
+			switch (message.TypeName())
             {
-                case MessageType.ConnectionOfferRequest:
+				case nameof(ConnectionOfferRequest):
                     {
-                        var res = await ConnectionOffer(context);
-                        return res.Wrap(MessageType.ConnectionOfferResponse);
+						return Any.Pack(await ConnectionOffer(context));
                     }
-                case MessageType.ConnectionRequest:
+				case nameof(ConnectionRequest):
                     {
-                        var connectionCreate = msg.Unwrap<ConnectionRequest>();
-
-                        var res = await ConnectionCreate(connectionCreate, context);
-                        return res.Wrap(MessageType.ConnectionResponse);
+						var connectionCreate = message.Unpack<ConnectionRequest>();
+						return Any.Pack(await ConnectionCreate(connectionCreate, context));
                     }
-            }
-            throw new Exception("Unsupported message type");
+			}
+			throw new Exception($"Unsupported message type: {message.TypeUrl}");
         }
 
 
@@ -68,7 +63,7 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
             var req = await Ledger.BuildNymRequestAsync(context.MyDid, context.TheirDid, context.TheirVk, null, null);
             var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
 
-            return new ConnectionResponse { Status = ConnectionResponse.Types.Status.Ok };
+            return new ConnectionResponse { Status = Status.Ok };
         }
 
         /// <summary>
@@ -85,6 +80,6 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// Returns the supported message types
         /// </summary>
         /// <returns>The message types.</returns>
-		public MessageType[] SupportedMessageTypes() => messageTypes;
+		public string[] SupportedMessageTypes() => messageTypes;
     }
 }

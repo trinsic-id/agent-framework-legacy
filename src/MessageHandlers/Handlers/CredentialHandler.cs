@@ -1,21 +1,23 @@
-﻿using Hyperledger.Indy.AnonCredsApi;
+﻿using Google.Protobuf.WellKnownTypes;
+using Hyperledger.Indy.AnonCredsApi;
+using Indy.Agent.Messages;
 using System;
 using System.Threading.Tasks;
 
-namespace Streetcred.AgentFramework.MessageHandlers.Handlers
+namespace AgentFramework.MessageHandlers.Handlers
 {
     /// <summary>
     /// Issuer handler.
     /// </summary>
     public class CredentialHandler : IHandler
     {
-		readonly MessageType[] messageTypes;
+		readonly string[] messageTypes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Streetcred.Agent.Agents.Handlers.CredentialHandler"/> class.
         /// </summary>
         /// <param name="messageTypes">Message types.</param>
-		public CredentialHandler(params MessageType[] messageTypes)
+		public CredentialHandler(params string[] messageTypes)
 		{
 			this.messageTypes = messageTypes;
 		}
@@ -23,8 +25,8 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Streetcred.Agent.Agents.Handlers.CredentialHandler"/> class.
         /// </summary>
-		public CredentialHandler() : this(MessageType.CredentialOfferRequest,
-		                                  MessageType.CredentialRequest)
+		public CredentialHandler() : this(nameof(CredentialOfferRequest),
+		                                  nameof(CredentialRequest))
 		{
 		}
 
@@ -34,34 +36,29 @@ namespace Streetcred.AgentFramework.MessageHandlers.Handlers
         /// <returns>The message.</returns>
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
-        public async Task<Msg> HandleMessage(Msg msg, IdentityContext context)
+        public async Task<Any> HandleMessage(Any msg, IdentityContext context)
         {
-            switch (msg.MessageType)
+			switch (msg.TypeName())
             {
-                case MessageType.CredentialOfferRequest:
+				case nameof(CredentialOfferRequest):
                     {
-                        var offerRequest = msg.Unwrap<CredentialOfferRequest>();
-
-                        var res = await CredentialOffer(offerRequest, context);
-                        return res.Wrap(MessageType.CredentialOfferResponse);
+						var offerRequest = msg.Unpack<CredentialOfferRequest>();
+						return Any.Pack(await CredentialOffer(offerRequest, context));
                     }
-
-                case MessageType.CredentialRequest:
+				case nameof(CredentialRequest):
                     {
-                        var credentialRequest = msg.Unwrap<CredentialRequest>();
-
-                        var res = await Credential(credentialRequest, context);
-                        return res.Wrap(MessageType.CredentialResponse);
+						var credentialRequest = msg.Unpack<CredentialRequest>();
+						return Any.Pack(await Credential(credentialRequest, context));
                     }
             }
-			throw new Exception($"Unsupported message type: {msg.MessageType}");
+			throw new Exception($"Unsupported message type: {msg.TypeUrl}");
         }
 
 		/// <summary>
 		/// Supporteds the message types.
 		/// </summary>
 		/// <returns>The message types.</returns>
-		public MessageType[] SupportedMessageTypes() => messageTypes;
+		public string[] SupportedMessageTypes() => messageTypes;
 
         /// <summary>
         /// Credentials the offer.

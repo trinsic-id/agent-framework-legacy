@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Hyperledger.Indy.PoolApi;
 using Hyperledger.Indy.WalletApi;
 
-namespace Streetcred.AgentFramework.MessageHandlers
+namespace AgentFramework.MessageHandlers
 {
     /// <summary>
     /// Agent context.

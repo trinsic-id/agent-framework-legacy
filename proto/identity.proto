@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "Indy.Agent.Messages";
+
+message EndpointSendRequest {
+    string endpoint = 1;
+}
+
+message NymCreateRequest {
+    string did = 1;
+    string verkey = 2;
+}
+
+message NymCreateResponse {
+}

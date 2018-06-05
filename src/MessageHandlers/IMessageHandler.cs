@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AgentFramework.MessageHandlers.Handlers;
+using Google.Protobuf.WellKnownTypes;
 
-namespace Streetcred.AgentFramework.MessageHandlers
+namespace AgentFramework.MessageHandlers
 {
     /// <summary>
     /// Agent service.
@@ -23,7 +25,7 @@ namespace Streetcred.AgentFramework.MessageHandlers
 		/// <returns>The message.</returns>
 		/// <param name="message">Message.</param>
 		/// <param name="context">Context.</param>
-		Task<Msg> ProcessMessage(Msg message, IdentityContext context);
+		Task<Any> ProcessMessage(Any message, IdentityContext context);
 		//{
         //    foreach (var agent in Handlers)
         //        if (agent.SupportedMessageTypes().Contains(message.MessageType))

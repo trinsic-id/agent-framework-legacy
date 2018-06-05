@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 
-namespace Streetcred.AgentFramework.MessageHandlers
+namespace AgentFramework.MessageHandlers.Handlers
 {
     /// <summary>
     /// Message handler.
@@ -11,7 +12,7 @@ namespace Streetcred.AgentFramework.MessageHandlers
         /// Supporteds the message types.
         /// </summary>
         /// <returns>The message types.</returns>
-        MessageType[] SupportedMessageTypes();
+        string[] SupportedMessageTypes();
 
         /// <summary>
         /// Handles the message.
@@ -19,6 +20,6 @@ namespace Streetcred.AgentFramework.MessageHandlers
         /// <returns>The message.</returns>
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
-        Task<Msg> HandleMessage(Msg msg, IdentityContext context);
+        Task<Any> HandleMessage(Any msg, IdentityContext context);
     }
 }
