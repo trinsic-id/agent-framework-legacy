@@ -14,10 +14,7 @@ namespace AgentFramework.MessageHandlers
         /// Gets the handler collection supported by this processor instance
         /// </summary>
         /// <value>The handlers.</value>
-		List<IHandler> Handlers
-        {
-            get;
-        }
+		List<IHandler> Handlers { get; }
 
 		/// <summary>
 		/// Processes the message.
@@ -26,12 +23,5 @@ namespace AgentFramework.MessageHandlers
 		/// <param name="message">Message.</param>
 		/// <param name="context">Context.</param>
 		Task<Any> ProcessMessage(Any message, IdentityContext context);
-		//{
-        //    foreach (var agent in Handlers)
-        //        if (agent.SupportedMessageTypes().Contains(message.MessageType))
-        //            return await agent.HandleMessage(message, context, requestContext);
-                
-        //    throw new NotSupportedException($"Message type '{message.MessageType}' is not supported by this agent.");
-        //}
     }
 }
