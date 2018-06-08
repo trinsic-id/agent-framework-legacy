@@ -1,0 +1,50 @@
+version: '3'
+services:
+  indy-pool:
+    build:
+      context: .
+      dockerfile: docker/indy-pool.dockerfile
+      args:
+        pool_ip: 10.0.0.10
+    ports:
+      - "9701-9709:9701-9709"
+    networks:
+      agent_net:
+        ipv4_address: 10.0.0.10
+
+  agent-service:
+    build:
+      context: .
+      dockerfile: docker/agent-service.dockerfile
+      args:
+        ip: 10.0.0.20
+        port: 5005
+    ports:
+      - "5000:5000"
+    depends_on:
+      - "indy-pool"
+    links:
+      - "indy-pool"
+    networks:
+      agent_net:
+        ipv4_address: 10.0.0.20
+
+  agent-client:
+    build:
+      context: .
+      dockerfile: docker/agent-client.dockerfile
+    depends_on:
+      - "agent-service"
+    links:
+      - "indy-pool"
+      - "agent-service"
+    networks:
+      agent_net:
+        ipv4_address: 10.0.0.30
+
+networks:
+  agent_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16

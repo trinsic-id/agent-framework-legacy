@@ -1,46 +1,33 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
-using Client.Utils;
-using Hyperledger.Indy.DidApi;
-using Hyperledger.Indy.PoolApi;
-using Hyperledger.Indy.WalletApi;
+using Microsoft.Extensions.Configuration;
 
 namespace Client
 {
     class Program
     {
+        public static IConfiguration Configuration { get; set; }
+
         static async Task Main(string[] args)
-		{
-			var myWalletName = "myWallet";
-            var theirWalletName = "theirWallet";
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
 
-			try
-			{
-				// 1. Create ledger config from genesis txn file
-				await PoolUtils.CreatePoolLedgerConfig();
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == null
+                || Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                builder = builder
+                    .AddJsonFile("appsettings.Development.json");
+            }
 
-				// 2. Create and Open My Wallet
-				await WalletUtils.CreateWalletAsync(PoolUtils.DEFAULT_POOL_NAME, myWalletName, "default", null, null);
+            Configuration = builder.Build();
 
-				//3. Open pool and wallets in using statements to ensure they are closed when finished.
-				using (var pool = await Pool.OpenPoolLedgerAsync(PoolUtils.DEFAULT_POOL_NAME, "{}"))
-				using (var myWallet = await Wallet.OpenWalletAsync(myWalletName, null, null))
-				{
-					//4. Create My Did
-					var createMyDidResult = await Did.CreateAndStoreMyDidAsync(myWallet, "{}");
-					var myDid = createMyDidResult.Did;
-					var myVerkey = createMyDidResult.VerKey;
+            await Task.Delay(TimeSpan.FromSeconds(15));
 
-					await myWallet.CloseAsync();
-					await pool.CloseAsync();
-				}
-			}
-			finally
-			{
-				await WalletUtils.DeleteWalletAsync(myWalletName, null);
-                await WalletUtils.DeleteWalletAsync(theirWalletName, null);
-                await PoolUtils.DeletePoolLedgerConfigAsync(PoolUtils.DEFAULT_POOL_NAME);
-			}
+            var example = new ClientExample();
+            await example.Execute();
         }
     }
 }

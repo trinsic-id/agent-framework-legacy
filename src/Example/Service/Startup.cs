@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Service.Formatters;
 using Service.Services;
 
 namespace Service
@@ -24,8 +25,11 @@ namespace Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-			services.AddSingleton<InitializationService>();
+            services.AddMvc(options =>
+            {
+                options.InputFormatters.Insert(0, new RawRequestBodyFormatter());
+            });
+            services.AddSingleton<InitializationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,8 +43,8 @@ namespace Service
             app.UseMvc();
 
             // Initalize agent wallet
-			var initService = app.ApplicationServices.GetService<InitializationService>();
-			Task.WhenAll(initService.RunAgentInitialization());
+            var initService = app.ApplicationServices.GetService<InitializationService>();
+            Task.WhenAll(initService.RunAgentInitialization());
         }
     }
 }

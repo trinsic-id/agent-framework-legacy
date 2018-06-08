@@ -1,4 +1,5 @@
 ﻿using Hyperledger.Indy.PoolApi;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -6,16 +7,19 @@ namespace Client.Utils
 {
     static class PoolUtils
     {
-        public const string DEFAULT_POOL_NAME = "default_pool";
+        public const string DEFAULT_POOL_NAME = "ClientPool";
 
         public static string CreateGenesisTxnFile()
         {
-			return new FileInfo("pool_genesis.txn").FullName;
+            return new FileInfo(Program.Configuration.GetSection("GenesisFile").Value).FullName;
         }
 
         public static async Task CreatePoolLedgerConfig()
         {
             var genesisTxnFile = CreateGenesisTxnFile();
+
+            Console.WriteLine($"Client genesis file: {genesisTxnFile}");
+
             var path = Path.GetFullPath(genesisTxnFile).Replace('\\', '/');
             var createPoolLedgerConfig = string.Format("{{\"genesis_txn\":\"{0}\"}}", path);
 
@@ -35,7 +39,7 @@ namespace Client.Utils
             {
                 await Pool.DeletePoolLedgerConfigAsync(name);
             }
-            catch(IOException) //TODO: This should be a more specific error when implemented
+            catch (IOException) //TODO: This should be a more specific error when implemented
             {
                 //Swallow expected exception if it happens.                
             }

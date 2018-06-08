@@ -32,6 +32,8 @@ namespace Service.Services
         /// <returns>The wallet and pool.</returns>
         async Task InitializeWalletAndPool()
         {
+            Console.WriteLine("Initializing agent wallet and pool config.");
+
             var walletName = configuration.GetSection("Agent:Wallet:Name").Get<string>();
             var seed = configuration.GetSection("Agent:Wallet:Seed").Get<string>();
             var poolName = configuration.GetSection("Agent:Pool:Name").Get<string>();
@@ -44,10 +46,6 @@ namespace Service.Services
             catch (PoolLedgerConfigExistsException)
             {
                 Debug.WriteLine("Configuration exists");
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine(e);
             }
 
             try
@@ -66,11 +64,6 @@ namespace Service.Services
             {
                 Debug.WriteLine("Wallet exists");
             }
-            catch (Exception e)
-            {
-                
-            }
-
         }
 
         /// <summary>
@@ -79,9 +72,18 @@ namespace Service.Services
         /// <returns>The agent initialization.</returns>
         internal async Task RunAgentInitialization()
         {
-            await InitializeWalletAndPool();
-            await SendEndpointToLedger();
-            await SendAttributesToLedger();
+            try
+            {
+                await InitializeWalletAndPool();
+                await SendEndpointToLedger();
+                await SendAttributesToLedger();
+
+                Console.WriteLine("Agent initialization completed.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Initialization failed: {e}");
+            }
         }
 
         /// <summary>
@@ -110,17 +112,19 @@ namespace Service.Services
         /// <returns>The endpoint to ledger.</returns>
         async Task SendEndpointToLedger()
         {
+            Console.WriteLine("Registering agent endpoint with ledger.");
+
             using (var context = await GetAgentContext())
             {
-                var address = configuration.GetSection("Agent:Endpoint:HostAddress").Get<string>();
-                var port = configuration.GetSection("Agent:Endpoint:Port").Get<string>();
+                var endpoint = Environment.GetEnvironmentVariable("AGENT_ENDPOINT")
+                                          ?? throw new Exception("Envrionment variable 'AGENT_ENDPOINT' must be set. Example: '127.0.0.1:5000'");
 
                 var endpointJson = JsonConvert.SerializeObject(new
                 {
                     endpoint = new
                     {
                         pubkey = context.MyPubKey,
-                        ha = $"{address}:{port}"
+                        ha = endpoint
                     }
                 });
                 var req = await Ledger.BuildAttribRequestAsync(context.MyDid, context.MyDid, null, endpointJson, null);
@@ -169,39 +173,13 @@ namespace Service.Services
         }
 
         /// <summary>
-        /// Gets the context.
-        /// </summary>
-        /// <returns>The context.</returns>
-        /// <param name="forDid">Issuer did.</param>
-        public async Task<IdentityContext> GetContext(string forDid)
-        {
-            var config = GetGenesisConfiguration();
-
-            var walletName = configuration.GetSection("Agent:Wallet:Name").Get<string>();
-            var poolName = configuration.GetSection("Agent:Pool:Name").Get<string>();
-
-            var pool = await Pool.OpenPoolLedgerAsync(poolName, null);
-            var wallet = await Wallet.OpenWalletAsync(walletName, null, null);
-            var key = await Did.KeyForLocalDidAsync(wallet, forDid);
-
-            return new IdentityContext
-            {
-                MyDid = forDid,
-                MyVk = key,
-                MyPubKey = key,
-                Pool = pool,
-                Wallet = wallet
-            };
-        }
-
-        /// <summary>
         /// Gets the genesis configuration.
         /// </summary>
         /// <returns>The genesis configuration.</returns>
         string GetGenesisConfiguration()
         {
-            var genesisFile = new FileInfo("pool_genesis.txn").FullName;
-            return $"{{\"genesis_txn\":\"{genesisFile}\"}}";
+            var genesisFile = new FileInfo(configuration.GetSection("Agent:GenesisFile").Get<string>());
+            return $"{{\"genesis_txn\":\"{genesisFile.FullName}\"}}";
         }
     }
 }

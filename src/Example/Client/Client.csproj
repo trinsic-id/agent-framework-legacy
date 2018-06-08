@@ -20,14 +20,10 @@
     <ProjectReference Include="..\..\Framework\Messages\Messages.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="pool_genesis.txn" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="pool_genesis.txn">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.0" />
   </ItemGroup>
 </Project>

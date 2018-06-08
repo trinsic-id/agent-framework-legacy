@@ -10,14 +10,6 @@
     <Folder Include="Handlers\" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Hyperledger.Indy.Sdk">
-      <HintPath>..\..\lib\Hyperledger.Indy.Sdk.dll</HintPath>
-    </Reference>
-    <Reference Include="Hyperledger.Indy.Sdk">
-      <HintPath>..\..\..\lib\Hyperledger.Indy.Sdk.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.1.0" />
   </ItemGroup>
@@ -28,5 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messages\Messages.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Hyperledger.Indy.Sdk">
+      <HintPath>..\..\..\lib\Hyperledger.Indy.Sdk.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

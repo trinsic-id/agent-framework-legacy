@@ -83,8 +83,8 @@ namespace AgentFramework.MessageHandlers
         /// Gets or sets their vk.
         /// </summary>
         /// <value>Their vk.</value>
-        public string TheirVk 
-        { 
+        public string TheirVk
+        {
             get;
             set;
         }
@@ -119,9 +119,10 @@ namespace AgentFramework.MessageHandlers
         }
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-		~IdentityContext() {
-          // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-          Dispose(false);
+        ~IdentityContext()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
         }
 
         // This code added to correctly implement the disposable pattern.
