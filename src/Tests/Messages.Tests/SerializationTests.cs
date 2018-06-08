@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using Indy.Agent.Messages;
 using Google.Protobuf.WellKnownTypes;
+using Google.Protobuf;
 
 namespace AgentFramework.Messages.Tests
 {
@@ -11,14 +12,17 @@ namespace AgentFramework.Messages.Tests
 		public void PackAndUnpack_Success()
         {
 			var request = new ConnectionOfferResponse { Nonce = Guid.NewGuid().ToString() };
-			var msg = new SignedMessage
+			var msg = new SecureMessage
 			{
-				Content = Any.Pack(request)
+				Content = Any.Pack(request).ToByteString()
 			};
 
-			var result = msg.Content.TryUnpack<ConnectionOfferResponse>(out var unpacked);
+			var result = new Any();
+			result.MergeFrom(msg.Content);
 
-			Assert.True(result);
+			var unpackResult = result.TryUnpack<ConnectionOfferResponse>(out var unpacked);
+
+			Assert.True(unpackResult);
 			Assert.NotNull(unpacked);
 			Assert.Equal(request.Nonce, unpacked.Nonce);
         }
@@ -27,14 +31,17 @@ namespace AgentFramework.Messages.Tests
         public void PackAndUnpack_Fail()
         {
             var request = new ConnectionOfferResponse();
-            var msg = new SignedMessage
+            var msg = new SecureMessage
             {
-                Content = Any.Pack(request)
+				Content = Any.Pack(request).ToByteString()
             };
 
-			var result = msg.Content.TryUnpack<CredentialOfferResponse>(out var unpacked);
+			var result = new Any();
+			result.MergeFrom(msg.Content);
 
-			Assert.False(result);
+			var unpackResult = result.TryUnpack<CredentialOfferResponse>(out var unpacked);
+
+			Assert.False(unpackResult);
 			Assert.Null(unpacked);
         }
     }

@@ -24,18 +24,18 @@ namespace Indy.Agent.Messages {
     static ConnectionReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChBjb25uZWN0aW9uLnByb3RvGg5tZXNzYWdlcy5wcm90byIYChZDb25uZWN0",
-            "aW9uT2ZmZXJSZXF1ZXN0IigKF0Nvbm5lY3Rpb25PZmZlclJlc3BvbnNlEg0K",
-            "BW5vbmNlGAEgASgJIiIKEUNvbm5lY3Rpb25SZXF1ZXN0Eg0KBW5vbmNlGAEg",
-            "ASgJIi0KEkNvbm5lY3Rpb25SZXNwb25zZRIXCgZzdGF0dXMYASABKA4yBy5T",
-            "dGF0dXNCFqoCE0luZHkuQWdlbnQuTWVzc2FnZXNiBnByb3RvMw=="));
+            "ChBjb25uZWN0aW9uLnByb3RvIhgKFkNvbm5lY3Rpb25PZmZlclJlcXVlc3Qi",
+            "KAoXQ29ubmVjdGlvbk9mZmVyUmVzcG9uc2USDQoFbm9uY2UYASABKAkiLwoR",
+            "Q29ubmVjdGlvblJlcXVlc3QSDQoFbm9uY2UYASABKAkSCwoDZGlkGAIgASgJ",
+            "IhQKEkNvbm5lY3Rpb25SZXNwb25zZUIWqgITSW5keS5BZ2VudC5NZXNzYWdl",
+            "c2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Indy.Agent.Messages.MessagesReflection.Descriptor, },
+          new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionOfferRequest), global::Indy.Agent.Messages.ConnectionOfferRequest.Parser, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionOfferResponse), global::Indy.Agent.Messages.ConnectionOfferResponse.Parser, new[]{ "Nonce" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionRequest), global::Indy.Agent.Messages.ConnectionRequest.Parser, new[]{ "Nonce" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionResponse), global::Indy.Agent.Messages.ConnectionResponse.Parser, new[]{ "Status" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionRequest), global::Indy.Agent.Messages.ConnectionRequest.Parser, new[]{ "Nonce", "Did" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionResponse), global::Indy.Agent.Messages.ConnectionResponse.Parser, null, null, null, null)
           }));
     }
     #endregion
@@ -298,6 +298,7 @@ namespace Indy.Agent.Messages {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ConnectionRequest(ConnectionRequest other) : this() {
       nonce_ = other.nonce_;
+      did_ = other.did_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -317,6 +318,17 @@ namespace Indy.Agent.Messages {
       }
     }
 
+    /// <summary>Field number for the "did" field.</summary>
+    public const int DidFieldNumber = 2;
+    private string did_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Did {
+      get { return did_; }
+      set {
+        did_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as ConnectionRequest);
@@ -331,6 +343,7 @@ namespace Indy.Agent.Messages {
         return true;
       }
       if (Nonce != other.Nonce) return false;
+      if (Did != other.Did) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -338,6 +351,7 @@ namespace Indy.Agent.Messages {
     public override int GetHashCode() {
       int hash = 1;
       if (Nonce.Length != 0) hash ^= Nonce.GetHashCode();
+      if (Did.Length != 0) hash ^= Did.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -355,6 +369,10 @@ namespace Indy.Agent.Messages {
         output.WriteRawTag(10);
         output.WriteString(Nonce);
       }
+      if (Did.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Did);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -365,6 +383,9 @@ namespace Indy.Agent.Messages {
       int size = 0;
       if (Nonce.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Nonce);
+      }
+      if (Did.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Did);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -380,6 +401,9 @@ namespace Indy.Agent.Messages {
       if (other.Nonce.Length != 0) {
         Nonce = other.Nonce;
       }
+      if (other.Did.Length != 0) {
+        Did = other.Did;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -393,6 +417,10 @@ namespace Indy.Agent.Messages {
             break;
           case 10: {
             Nonce = input.ReadString();
+            break;
+          }
+          case 18: {
+            Did = input.ReadString();
             break;
           }
         }
@@ -426,24 +454,12 @@ namespace Indy.Agent.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ConnectionResponse(ConnectionResponse other) : this() {
-      status_ = other.status_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ConnectionResponse Clone() {
       return new ConnectionResponse(this);
-    }
-
-    /// <summary>Field number for the "status" field.</summary>
-    public const int StatusFieldNumber = 1;
-    private global::Indy.Agent.Messages.Status status_ = 0;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Indy.Agent.Messages.Status Status {
-      get { return status_; }
-      set {
-        status_ = value;
-      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -459,14 +475,12 @@ namespace Indy.Agent.Messages {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Status != other.Status) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Status != 0) hash ^= Status.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -480,10 +494,6 @@ namespace Indy.Agent.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Status != 0) {
-        output.WriteRawTag(8);
-        output.WriteEnum((int) Status);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -492,9 +502,6 @@ namespace Indy.Agent.Messages {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Status != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
-      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -505,9 +512,6 @@ namespace Indy.Agent.Messages {
     public void MergeFrom(ConnectionResponse other) {
       if (other == null) {
         return;
-      }
-      if (other.Status != 0) {
-        Status = other.Status;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -520,10 +524,6 @@ namespace Indy.Agent.Messages {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 8: {
-            status_ = (global::Indy.Agent.Messages.Status) input.ReadEnum();
-            break;
-          }
         }
       }
     }

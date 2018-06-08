@@ -5,6 +5,12 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <LangVersion>Latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>Latest</LangVersion>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Hyperledger.Indy.Sdk">
       <HintPath>..\..\..\lib\Hyperledger.Indy.Sdk.dll</HintPath>
@@ -12,5 +18,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Messages\Messages.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="pool_genesis.txn" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="pool_genesis.txn">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\" />
   </ItemGroup>
 </Project>

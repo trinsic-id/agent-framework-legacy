@@ -29,29 +29,39 @@ namespace Service.Controllers
 		[HttpPost()]
         public async Task<IActionResult> Post([FromBody] byte[] body)
         {
+			var message = new SecureMessage();
+            message.MergeFrom(body);
+
             using (var context = await initializationService.GetAgentContext())
             {
-                var decrypted = await Crypto.AuthDecryptAsync(context.Wallet, context.MyVk, body);
+				var innerMessage = new Any();
 
-                var message = new SignedMessage();
-                message.MergeFrom(body);
+				switch (message.Type)
+				{
+					case MessageType.AnonCrypt:
+						{
+							innerMessage.MergeFrom(await Crypto.AnonDecryptAsync(context.Wallet, context.MyVk, body));
+							var response = await ProcessMessage(innerMessage, context);
 
-                if (!await Crypto.VerifyAsync(decrypted.TheirVk, message.Content.ToByteArray(), message.Signature.ToByteArray()))
-                {
-                    throw new Exception("Invalid signature");
-                }
+							return await this.SignedResponse(context, response);
+						}
+					case MessageType.AuthCrypt:
+						{
+							var decrypted = await Crypto.AuthDecryptAsync(context.Wallet, context.MyVk, body);
+							innerMessage.MergeFrom(decrypted.MessageData);
+							context.TheirVk = decrypted.TheirVk;
 
-                context.TheirVk = decrypted.TheirVk;
-                context.TheirDid = message.SignerDid;
+							if (!await Crypto.VerifyAsync(decrypted.TheirVk, message.Content.ToByteArray(), message.Signature.ToByteArray()))
+							{
+								throw new Exception("Invalid signature");
+							}                     
+							var response = await ProcessMessage(innerMessage, context);
 
-                var response = await ProcessMessage(message.Content, context);
-
-                var result = new SignedMessage();
-                result.SignerDid = context.MyDid;
-                result.Signature = ByteString.CopyFrom(await Crypto.SignAsync(context.Wallet, context.MyVk, response.ToByteArray()));
-
-                return File(response.ToByteArray(), "application/octet-stream");
+							return await this.AuthCryptResponse(context, response);
+						}
+				}
             }
+			throw new Exception($"Unsupported message type: {message.Type}");
         }
 
 		public async Task<Any> ProcessMessage(Any message, IdentityContext context)

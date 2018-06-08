@@ -63,7 +63,7 @@ namespace AgentFramework.MessageHandlers.Handlers
 			var req = await Ledger.BuildNymRequestAsync(context.MyDid, context.TheirDid, context.TheirVk, null, null);
 			var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
 
-			return new ConnectionResponse { Status = Status.Ok };
+			return new ConnectionResponse();
 		}
 
 		/// <summary>

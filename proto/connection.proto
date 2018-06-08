@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "messages.proto";
-
 option csharp_namespace = "Indy.Agent.Messages";
 
 message ConnectionOfferRequest {
@@ -13,8 +11,8 @@ message ConnectionOfferResponse {
 
 message ConnectionRequest {
     string nonce = 1;
+    string did = 2;
 }
 
 message ConnectionResponse {
-    Status status = 1;
 }
