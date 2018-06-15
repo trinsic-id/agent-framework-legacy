@@ -2,22 +2,12 @@ syntax = "proto3";
 
 option csharp_namespace = "Indy.Agent.Messages";
 
-import "google/protobuf/any.proto";
-
-message SecureMessage {
-    bytes content = 1;
-    bytes signature = 2;
-    MessageType type = 3;
-}
-
-message UnsecureMessage {
-    google.protobuf.Any content = 1;
-    bytes signature = 2;
-}
-
-enum MessageType {
-    AUTH_CRYPT = 0;
-    ANON_CRYPT = 1;
+message Msg {
+    string id = 1;
+    string type = 2;
+    string aud = 3;
+    string origin = 4;
+    bytes content = 5;
 }
 
 enum Status {
@@ -26,4 +16,14 @@ enum Status {
     INVALID_SIGNATURE = 2;
     MISSING_SIGNATURE = 3;
     UNKNOWN_ERROR = 4;
+}
+
+// urn:sovrin:agent:message_type:streetcred.nyc/*
+
+message GetMessages {
+    string did = 1;
+}
+
+message GetMessagesResponse {
+    repeated Msg messages = 1;
 }

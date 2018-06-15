@@ -4,76 +4,104 @@ using System.Linq;
 using System.Threading.Tasks;
 using AgentFramework.MessageHandlers;
 using AgentFramework.MessageHandlers.Handlers;
+using AgentFramework.MessageHandlers.Services.Contracts;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Hyperledger.Indy.CryptoApi;
+using Hyperledger.Indy.DidApi;
 using Indy.Agent.Messages;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services;
 
 namespace Service.Controllers
 {
-    [Route("/")]
     public class AgentController : Controller, IMessageHandler
     {
         readonly InitializationService initializationService;
+        readonly IRouterService routerService;
+        readonly IStorageService storageService;
 
-        public AgentController(InitializationService initializationService)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Service.Controllers.AgentController"/> class.
+        /// </summary>
+        /// <param name="initializationService">Initialization service.</param>
+        public AgentController(InitializationService initializationService, IRouterService routerService, IStorageService storageService)
         {
-            Handlers = new List<IHandler>(this.BuildIssuer());
+            this.storageService = storageService;
+            this.Handlers = new IHandler[]
+            {
+                new ConnectionHandler(storageService, routerService),
+                new MessagesHandler(storageService)
+            };
+
             this.initializationService = initializationService;
+            this.routerService = routerService;
         }
 
-        public List<IHandler> Handlers { get; }
+        /// <summary>
+        /// Gets the message handlers supported by this agent
+        /// </summary>
+        /// <value>The handlers.</value>
+        public IHandler[] Handlers { get; }
 
-        [HttpPost]
+        /// <summary>
+        /// An endpoint for agent interaction
+        /// </summary>
+        /// <returns>The post.</returns>
+        /// <param name="body">Body.</param>
+        [HttpPost("/")]
         public async Task<IActionResult> Post([FromBody] byte[] body)
         {
-            var message = new SecureMessage();
-            message.MergeFrom(body);
-
             using (var context = await initializationService.GetAgentContext())
             {
-                var innerMessage = new Any();
+                var msg = new Msg();
+                msg.MergeFrom(await Crypto.AnonDecryptAsync(context.Wallet, context.MyVk, body));
 
-                switch (message.Type)
-                {
-                    case MessageType.AnonCrypt:
-                        {
-                            innerMessage.MergeFrom(await Crypto.AnonDecryptAsync(context.Wallet, context.MyVk, message.Content.ToByteArray()));
-
-                            var response = await ProcessMessage(innerMessage, context);
-                            return await this.SignedResponse(context, response);
-                        }
-                    case MessageType.AuthCrypt:
-                        {
-                            var decrypted = await Crypto.AuthDecryptAsync(context.Wallet, context.MyVk, message.Content.ToByteArray());
-                            innerMessage.MergeFrom(decrypted.MessageData);
-
-                            if (!await Crypto.VerifyAsync(decrypted.TheirVk, message.Content.ToByteArray(), message.Signature.ToByteArray()))
-                            {
-                                throw new Exception("Invalid signature");
-                            }
-                            context.TheirVk = decrypted.TheirVk;
-
-                            var response = await ProcessMessage(innerMessage, context);
-                            return await this.AuthCryptResponse(context, response);
-                        }
-                }
+                await ProcessMessage(msg, context);
+                return Ok();
             }
-            throw new Exception($"Unsupported message type: {message.Type}");
         }
 
-        public async Task<Any> ProcessMessage(Any message, IdentityContext context)
+        /// <summary>
+        /// Post the specified body.
+        /// </summary>
+        /// <returns>The post.</returns>
+        /// <param name="body">Body.</param>
+        [HttpPost("api")]
+        public async Task<IActionResult> PostApi([FromBody] byte[] body)
         {
-            Console.WriteLine($"Processing message of type {message.TypeUrl}");
+            using (var context = await initializationService.GetAgentContext())
+            {
+                var decrypted = await Crypto.AuthDecryptAsync(context.Wallet, context.MyVk, body);
+                context.TheirVk = decrypted.TheirVk;
+
+                var msg = new Msg();
+                msg.MergeFrom(decrypted.MessageData);
+
+                var response = await ProcessMessage(msg, context);
+                if (response != null)
+                {
+                    var encrypted = await Crypto.AuthCryptAsync(context.Wallet, context.MyVk, context.TheirVk, response.ToByteArray());
+                    return File(encrypted, "application/octet-stream");
+                }
+                return Ok();
+            }
+        }
+
+        /// <summary>
+        /// Processes the message.
+        /// </summary>
+        /// <returns>The message.</returns>
+        /// <param name="message">Message.</param>
+        /// <param name="context">Context.</param>
+        public async Task<Msg> ProcessMessage(Msg message, IdentityContext context)
+        {
+            Console.WriteLine($"Processing message of type: {message.Type}");
 
             foreach (var handler in Handlers)
-                if (handler.SupportedMessageTypes().Contains(message.TypeName()))
+                if (handler.SupportedMessageTypes().Contains(message.Type))
                     return await handler.HandleMessage(message, context);
 
-            throw new NotSupportedException($"Message type '{message.TypeUrl}' is not supported by this agent endpoint.");
-
+            throw new Exception($"Unspported message type: {message.Type}");
         }
     }
 }

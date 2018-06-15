@@ -18,7 +18,7 @@ namespace Client.Utils
         {
             var genesisTxnFile = CreateGenesisTxnFile();
 
-            Console.WriteLine($"Client genesis file: {genesisTxnFile}");
+            Console.WriteLine($"Genesis file {genesisTxnFile}");
 
             var path = Path.GetFullPath(genesisTxnFile).Replace('\\', '/');
             var createPoolLedgerConfig = string.Format("{{\"genesis_txn\":\"{0}\"}}", path);

@@ -12,15 +12,15 @@ services:
       agent_net:
         ipv4_address: 10.0.0.10
 
-  agent-service:
+  agent-organization:
     build:
       context: .
       dockerfile: docker/agent-service.dockerfile
       args:
         ip: 10.0.0.20
-        port: 5005
+        port: 5020
     ports:
-      - "5005:5005"
+      - "5020:5020"
     depends_on:
       - "indy-pool"
     links:
@@ -29,15 +29,36 @@ services:
       agent_net:
         ipv4_address: 10.0.0.20
 
-  agent-client:
+  agent-cloud:
     build:
       context: .
-      dockerfile: docker/agent-client.dockerfile
+      dockerfile: docker/agent-service.dockerfile
+      args:
+        ip: 10.0.0.25
+        port: 5025
+        aspnet_env: Cloud
+    ports:
+      - "5025:5025"
     depends_on:
-      - "agent-service"
+      - "indy-pool"
     links:
       - "indy-pool"
-      - "agent-service"
+    networks:
+      agent_net:
+        ipv4_address: 10.0.0.25
+
+  agent-edge:
+    build:
+      context: .
+      dockerfile: docker/agent-edge.dockerfile
+    depends_on:
+      - "agent-organization"
+      - "agent-cloud"
+      - "indy-pool"
+    links: 
+      - "indy-pool" 
+      - "agent-organization" 
+      - "agent-cloud"
     networks:
       agent_net:
         ipv4_address: 10.0.0.30

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AgentFramework.MessageHandlers.Handlers;
 using Google.Protobuf.WellKnownTypes;
+using Indy.Agent.Messages;
 
 namespace AgentFramework.MessageHandlers
 {
@@ -14,14 +15,14 @@ namespace AgentFramework.MessageHandlers
         /// Gets the handler collection supported by this processor instance
         /// </summary>
         /// <value>The handlers.</value>
-		List<IHandler> Handlers { get; }
+		IHandler[] Handlers { get; }
 
-		/// <summary>
-		/// Processes the message.
-		/// </summary>
-		/// <returns>The message.</returns>
-		/// <param name="message">Message.</param>
-		/// <param name="context">Context.</param>
-		Task<Any> ProcessMessage(Any message, IdentityContext context);
+        /// <summary>
+        /// Processes the message.
+        /// </summary>
+        /// <returns>The message.</returns>
+        /// <param name="message">Message.</param>
+        /// <param name="context">Context.</param>
+        Task<Msg> ProcessMessage(Msg message, IdentityContext context);
     }
 }

@@ -17,6 +17,9 @@ namespace Service.Services
     {
         readonly IConfiguration configuration;
 
+        static Wallet wallet;
+        static Pool pool;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Streetcred.AgentFramework.Services.WalletService"/> class.
         /// </summary>
@@ -35,13 +38,16 @@ namespace Service.Services
             Console.WriteLine("Initializing agent wallet and pool config.");
 
             var walletName = configuration.GetSection("Agent:Wallet:Name").Get<string>();
-            var seed = configuration.GetSection("Agent:Wallet:Seed").Get<string>();
+            var stewardSeed = configuration.GetSection("Agent:Wallet:StewardSeed").Get<string>();
+            var agentSeed = configuration.GetSection("Agent:Wallet:AgentSeed").Get<string>();
             var poolName = configuration.GetSection("Agent:Pool:Name").Get<string>();
 
             try
             {
                 var config = GetGenesisConfiguration();
                 await Pool.CreatePoolLedgerConfigAsync(poolName, config);
+
+                pool = await Pool.OpenPoolLedgerAsync(poolName, null);
             }
             catch (PoolLedgerConfigExistsException)
             {
@@ -51,14 +57,17 @@ namespace Service.Services
             try
             {
                 await Wallet.CreateWalletAsync(poolName, walletName, "default", null, null);
+                wallet = await Wallet.OpenWalletAsync(walletName, null, null);
 
-                var wallet = await Wallet.OpenWalletAsync(walletName, null, null);
-                var agentDid = await Did.CreateAndStoreMyDidAsync(wallet, JsonConvert.SerializeObject(new { seed }));
+                var stewardDid = await Did.CreateAndStoreMyDidAsync(wallet, JsonConvert.SerializeObject(new { seed = stewardSeed }));
+                var agentDid = await Did.CreateAndStoreMyDidAsync(wallet, JsonConvert.SerializeObject(new { seed = agentSeed }));
+
+                var req = await Ledger.BuildNymRequestAsync(stewardDid.Did, agentDid.Did, agentDid.VerKey, null, "TRUST_ANCHOR");
+                var res = await Ledger.SignAndSubmitRequestAsync(pool, wallet, stewardDid.Did, req);
 
                 // Set custom attribute to locate the did later in case multiple did's are created
                 await Did.SetDidMetadataAsync(wallet, agentDid.Did, JsonConvert.SerializeObject(new { agent_did = true }));
-
-                await wallet.CloseAsync();
+                await Did.SetDidMetadataAsync(wallet, stewardDid.Did, JsonConvert.SerializeObject(new { agent_did = false }));
             }
             catch (WalletExistsException)
             {
@@ -76,7 +85,6 @@ namespace Service.Services
             {
                 await InitializeWalletAndPool();
                 await SendEndpointToLedger();
-                await SendAttributesToLedger();
 
                 Console.WriteLine("Agent initialization completed.");
             }
@@ -87,33 +95,11 @@ namespace Service.Services
         }
 
         /// <summary>
-        /// Send custom agent info to the ledger.
-        /// </summary>
-        /// <returns>The attributes to ledger.</returns>
-        async Task SendAttributesToLedger()
-        {
-            using (var context = await GetAgentContext())
-            {
-                var attribJson = JsonConvert.SerializeObject(new
-                {
-                    agentInfo = new
-                    {
-                        name = configuration.GetSection("Agent:Attributes:Name").Get<string>()
-                    }
-                });
-                var req = await Ledger.BuildAttribRequestAsync(context.MyDid, context.MyDid, null, attribJson, null);
-                var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
-            }
-        }
-
-        /// <summary>
         /// Sends the endpoint to ledger.
         /// </summary>
         /// <returns>The endpoint to ledger.</returns>
         async Task SendEndpointToLedger()
         {
-            Console.WriteLine("Registering agent endpoint with ledger.");
-
             using (var context = await GetAgentContext())
             {
                 var endpoint = Environment.GetEnvironmentVariable("AGENT_ENDPOINT")
@@ -123,15 +109,16 @@ namespace Service.Services
                 {
                     endpoint = new
                     {
-                        pubkey = context.MyPubKey,
+                        pubkey = context.MyVk,
                         ha = endpoint
                     }
                 });
                 var req = await Ledger.BuildAttribRequestAsync(context.MyDid, context.MyDid, null, endpointJson, null);
                 var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
+
+                Console.WriteLine($"Registered endpoint {endpoint} for agent did {context.MyDid}");
             }
         }
-
 
         /// <summary>
         /// Gets the configuration context.
@@ -139,13 +126,6 @@ namespace Service.Services
         /// <returns>The configuration context.</returns>
         public async Task<IdentityContext> GetAgentContext()
         {
-            var config = GetGenesisConfiguration();
-
-            var walletName = configuration.GetSection("Agent:Wallet:Name").Get<string>();
-            var poolName = configuration.GetSection("Agent:Pool:Name").Get<string>();
-
-            var pool = await Pool.OpenPoolLedgerAsync(poolName, null);
-            var wallet = await Wallet.OpenWalletAsync(walletName, null, null);
             var keys = JArray.Parse(await Did.ListMyDidsWithMetaAsync(wallet));
 
             foreach (var item in keys)
@@ -162,7 +142,6 @@ namespace Service.Services
                         {
                             MyDid = did,
                             MyVk = verKey,
-                            MyPubKey = verKey,
                             Pool = pool,
                             Wallet = wallet
                         };
