@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
+using Indy.Agent.Messages;
 
 namespace AgentFramework.MessageHandlers.Handlers
 {
@@ -20,6 +21,6 @@ namespace AgentFramework.MessageHandlers.Handlers
         /// <returns>The message.</returns>
         /// <param name="msg">Message.</param>
         /// <param name="context">Context.</param>
-        Task<Any> HandleMessage(Any msg, IdentityContext context);
+        Task<Msg> HandleMessage(Msg msg, IdentityContext context);
     }
 }

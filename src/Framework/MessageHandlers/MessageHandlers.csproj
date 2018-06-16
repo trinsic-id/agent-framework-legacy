@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <Folder Include="Handlers\" />
+    <Folder Include="Services\" />
+    <Folder Include="Services\Contracts\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
@@ -17,6 +19,9 @@
     <Compile Remove="Messages.cs" />
     <Compile Remove="RequestContext.cs" />
     <Compile Remove="Messages\Authentication.cs" />
+    <Compile Remove="Handlers\RegistrarHandler.cs" />
+    <Compile Remove="Handlers\AuthenticationHandler.cs" />
+    <Compile Remove="Handlers\VerifierHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messages\Messages.csproj" />

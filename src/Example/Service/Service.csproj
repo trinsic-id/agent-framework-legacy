@@ -15,6 +15,7 @@
     <EnvironmentVariables>
       <Variable name="ASPNETCORE_ENVIRONMENT" value="Development" />
       <Variable name="AGENT_ENDPOINT" value="127.0.0.1:5000" />
+      <Variable name="AGENT_MODE" value="Agent" />
     </EnvironmentVariables>
     <LaunchBrowser>false</LaunchBrowser>
     <LaunchUrl>/</LaunchUrl>
@@ -36,5 +37,11 @@
     <Reference Include="Hyperledger.Indy.Sdk">
       <HintPath>..\..\..\lib\Hyperledger.Indy.Sdk.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Properties\launchSettings.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Controllers\CloudController.cs" />
   </ItemGroup>
 </Project>

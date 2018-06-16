@@ -108,7 +108,7 @@ namespace AgentFramework.MessageHandlers
             {
                 if (disposing)
                 {
-                    Task.WhenAll(Wallet.CloseAsync(), Pool.CloseAsync());
+                    //Task.WhenAll(Wallet.CloseAsync(), Pool.CloseAsync());
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
