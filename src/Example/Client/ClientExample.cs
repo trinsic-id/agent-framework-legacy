@@ -26,8 +26,8 @@ namespace Client
     {
         const string myWalletName = "ClientWallet";
 
-        const string agentDid = "Q56vyWuJa34ME57wkDTzC4";
-        const string myPublicDid = "CC8o5M5KLdxkTCRKLxJggH";
+        string agentDid = Program.Configuration.GetSection("MyPublicDid").Value;
+        string myPublicDid = Program.Configuration.GetSection("OrganizationPublicDid").Value;
 
         string myDid;
         string myVk;
@@ -85,35 +85,61 @@ namespace Client
                 Console.WriteLine($"Registering did with ledger using cloud agent: {myPublicDid}");
 
                 // Register did and vk with ledger using cloud agent
-                await SendToCloudAgent(StreetcredMessages.SEND_NYM, new SendNym { Did = myDid });
+                await SendToCloudAgent(StreetcredMessages.SEND_NYM, new SendNym { Did = myDid, Verkey = myVk });
 
                 Console.WriteLine($"Sending connection requests to organization agent: {agentDid}");
 
                 // Send a connection to request to organization
                 var connectionRequest = new ConnectionRequest() { Did = myDid, EndpointDid = myPublicDid };
-                await SendToOrganizationAgent(SovrinMessages.CONNECTION_REQUEST, connectionRequest.ToByteArray());
+                await SendToOrganizationAgent(SovrinMessages.CONNECTION_REQUEST, agentDid, agentDid, connectionRequest.ToByteArray());
 
                 Console.WriteLine("Fetching new messages from cloud agent");
 
-                // Check my cloud for new messages
-                var messages = await SendToCloudAgent(StreetcredMessages.GET_MESSAGES, new GetMessages());
-                var getMessages = new GetMessagesResponse();
-                getMessages.MergeFrom(messages.Content);
-
-                foreach (var message in getMessages.Messages)
-                {
-                    Console.WriteLine($"Received message of type: {message.Type}");
-                }
+                await CheckCloudMessages();
 
                 Console.WriteLine($"Demo completed.");
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e}");
+                throw;
             }
             finally
             {
                 await Cleanup();
+            }
+        }
+
+        async Task CheckCloudMessages()
+        {
+            // Check my cloud for new messages
+            var messages = await SendToCloudAgent(StreetcredMessages.GET_MESSAGES, new GetMessages());
+            var getMessages = new GetMessagesResponse();
+            getMessages.MergeFrom(messages.Content);
+
+            foreach (var message in getMessages.Messages)
+            {
+                switch (message.Type)
+                {
+                    case SovrinMessages.CONNECTION_RESPONSE:
+                        {
+                            var decrypted = await Crypto.AnonDecryptAsync(wallet, myVk, message.Content.ToByteArray());
+                            var theirKey = await Did.KeyForDidAsync(pool, wallet, message.Origin);
+
+                            await Did.StoreTheirDidAsync(wallet, JsonConvert.SerializeObject(new { did = message.Origin, verkey = theirKey }));
+                            await Pairwise.CreateAsync(wallet, message.Origin, myDid, null);
+
+                            var ack = new ConnectionAcknowledgement();
+                            ack.Message = "Success";
+
+                            var encrypted = await Crypto.AuthCryptAsync(wallet, myVk, theirKey, ack.ToByteArray());
+
+                            Console.WriteLine($"Sending connection acknowledgement to {agentDid} for {message.Origin} connection");
+
+                            await SendToOrganizationAgent(SovrinMessages.CONNECTION_ACKONOWLEDGEMENT, message.Origin, agentDid, encrypted);
+                            break;
+                        }
+                }
             }
         }
 
@@ -156,14 +182,15 @@ namespace Client
             }
         }
 
-        async Task SendToOrganizationAgent(string type, byte[] request)
+        async Task SendToOrganizationAgent(string type, string theirDid, string theirPublicDid, byte[] request)
         {
-            var endpoint = await Did.GetEndpointForDidAsync(wallet, pool, agentDid);
-            var cloudAgentVk = await Did.KeyForDidAsync(pool, wallet, agentDid);
+            var endpoint = await Did.GetEndpointForDidAsync(wallet, pool, theirPublicDid);
+            var cloudAgentVk = await Did.KeyForDidAsync(pool, wallet, theirPublicDid);
 
             var msg = new Msg();
             msg.Content = ByteString.CopyFrom(request);
             msg.Origin = myDid;
+            msg.Aud = theirDid;
             msg.Type = type;
 
             using (var client = new HttpClient())

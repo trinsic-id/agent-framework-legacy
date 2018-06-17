@@ -46,12 +46,14 @@ namespace Service.Services
             {
                 var config = GetGenesisConfiguration();
                 await Pool.CreatePoolLedgerConfigAsync(poolName, config);
-
-                pool = await Pool.OpenPoolLedgerAsync(poolName, null);
             }
             catch (PoolLedgerConfigExistsException)
             {
                 Debug.WriteLine("Configuration exists");
+            }
+            finally
+            {
+                pool = await Pool.OpenPoolLedgerAsync(poolName, null);
             }
 
             try
@@ -67,11 +69,11 @@ namespace Service.Services
 
                 // Set custom attribute to locate the did later in case multiple did's are created
                 await Did.SetDidMetadataAsync(wallet, agentDid.Did, JsonConvert.SerializeObject(new { agent_did = true }));
-                await Did.SetDidMetadataAsync(wallet, stewardDid.Did, JsonConvert.SerializeObject(new { agent_did = false }));
             }
             catch (WalletExistsException)
             {
                 Debug.WriteLine("Wallet exists");
+                wallet = await Wallet.OpenWalletAsync(walletName, null, null);
             }
         }
 
@@ -109,14 +111,14 @@ namespace Service.Services
                 {
                     endpoint = new
                     {
-                        pubkey = context.MyVk,
+                        pubkey = context.MyPublicVerkey,
                         ha = endpoint
                     }
                 });
-                var req = await Ledger.BuildAttribRequestAsync(context.MyDid, context.MyDid, null, endpointJson, null);
-                var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
+                var req = await Ledger.BuildAttribRequestAsync(context.MyPublicDid, context.MyPublicDid, null, endpointJson, null);
+                var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyPublicDid, req);
 
-                Console.WriteLine($"Registered endpoint {endpoint} for agent did {context.MyDid}");
+                Console.WriteLine($"Registered endpoint {endpoint} for agent did {context.MyPublicDid}");
             }
         }
 
@@ -130,7 +132,7 @@ namespace Service.Services
 
             foreach (var item in keys)
             {
-                if (item["metadata"] != null)
+                if (item["metadata"] != null && !string.IsNullOrWhiteSpace(item["metadata"].ToString()))
                 {
                     var meta = JObject.Parse(item["metadata"].ToObject<string>());
                     if (meta["agent_did"] != null && meta["agent_did"].ToObject<bool>())
@@ -140,8 +142,8 @@ namespace Service.Services
 
                         return new IdentityContext
                         {
-                            MyDid = did,
-                            MyVk = verKey,
+                            MyPublicDid = did,
+                            MyPublicVerkey = verKey,
                             Pool = pool,
                             Wallet = wallet
                         };

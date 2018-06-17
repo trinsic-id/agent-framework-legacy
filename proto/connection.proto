@@ -32,6 +32,7 @@ message ConnectionAcknowledgement {
 
 message SendNym {
     string did = 1;
+    string verkey = 2;
 }
 
 message CreateConnectionOffer {

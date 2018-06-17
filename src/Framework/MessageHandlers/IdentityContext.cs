@@ -39,51 +39,19 @@ namespace AgentFramework.MessageHandlers
             set;
         }
 
-        /// <summary>
-        /// Gets or sets the did.
-        /// </summary>
-        /// <value>The did.</value>
-        public string MyDid
+        public string MyPublicDid
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// Gets or sets the ver key.
-        /// </summary>
-        /// <value>The ver key.</value>
-        public string MyVk
+        public string MyPublicVerkey
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// Gets or sets the pub key.
-        /// </summary>
-        /// <value>The pub key.</value>
-        public string MyPubKey
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets their did.
-        /// </summary>
-        /// <value>Their did.</value>
-        public string TheirDid
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets their vk.
-        /// </summary>
-        /// <value>Their vk.</value>
-        public string TheirVk
+        public string TheirPublicDid
         {
             get;
             set;

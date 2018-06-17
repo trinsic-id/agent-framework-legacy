@@ -54,7 +54,7 @@ namespace Service.Controllers
             using (var context = await initializationService.GetAgentContext())
             {
                 var msg = new Msg();
-                msg.MergeFrom(await Crypto.AnonDecryptAsync(context.Wallet, context.MyVk, body));
+                msg.MergeFrom(await Crypto.AnonDecryptAsync(context.Wallet, context.MyPublicVerkey, body));
 
                 await ProcessMessage(msg, context);
                 return Ok();
@@ -71,8 +71,8 @@ namespace Service.Controllers
         {
             using (var context = await initializationService.GetAgentContext())
             {
-                var decrypted = await Crypto.AuthDecryptAsync(context.Wallet, context.MyVk, body);
-                context.TheirVk = decrypted.TheirVk;
+                var decrypted = await Crypto.AuthDecryptAsync(context.Wallet, context.MyPublicVerkey, body);
+                var theirVk = decrypted.TheirVk;
 
                 var msg = new Msg();
                 msg.MergeFrom(decrypted.MessageData);
@@ -80,7 +80,8 @@ namespace Service.Controllers
                 var response = await ProcessMessage(msg, context);
                 if (response != null)
                 {
-                    var encrypted = await Crypto.AuthCryptAsync(context.Wallet, context.MyVk, context.TheirVk, response.ToByteArray());
+                    var myVk = await Did.KeyForLocalDidAsync(context.Wallet, context.MyPublicDid);
+                    var encrypted = await Crypto.AuthCryptAsync(context.Wallet, myVk, theirVk, response.ToByteArray());
                     return File(encrypted, "application/octet-stream");
                 }
                 return Ok();
