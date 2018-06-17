@@ -9,6 +9,7 @@ using Hyperledger.Indy.LedgerApi;
 using Hyperledger.Indy.PairwiseApi;
 using Indy.Agent.Messages;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AgentFramework.MessageHandlers.Handlers
 {
@@ -101,27 +102,39 @@ namespace AgentFramework.MessageHandlers.Handlers
             var request = new ConnectionRequest();
             request.MergeFrom(message.Content);
 
-            var my = await Did.CreateAndStoreMyDidAsync(context.Wallet, "{}");
-            var their = await Did.KeyForDidAsync(context.Pool, context.Wallet, request.Did);
+            string myDid;
+            string myVk;
 
-            await Did.SetDidMetadataAsync(context.Wallet, my.Did, JsonConvert.SerializeObject(new { agent_did = false }));
-
-            context.TheirDid = request.Did;
-
-            await Did.StoreTheirDidAsync(context.Wallet, JsonConvert.SerializeObject(new { did = request.Did, verkey = their }));
-
-            await Pairwise.CreateAsync(context.Wallet, request.Did, my.Did, null);
-
-            if (!string.IsNullOrEmpty(request.Endpoint))
+            if (await storageService.TryGetNonce(request.RequestNonce, out byte[] offerMessage))
             {
-                var pubDid = await Did.KeyForDidAsync(context.Pool, context.Wallet, request.EndpointDid);
-                await Did.SetEndpointForDidAsync(context.Wallet, request.EndpointDid, request.Endpoint, pubDid);
+                var offer = new ConnectionOffer();
+                offer.MergeFrom(offerMessage);
+
+                myDid = offer.Did;
+                myVk = offer.Verkey;
             }
+            else
+            {
+                var my = await Did.CreateAndStoreMyDidAsync(context.Wallet, "{}");
+                myDid = my.Did;
+                myVk = my.VerKey;
+
+                var nymRequest = await Ledger.BuildNymRequestAsync(context.MyPublicDid, my.Did, my.VerKey, null, null);
+                var nymResponse = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyPublicDid, nymRequest);
+            }
+
+            var theirKey = await Did.KeyForDidAsync(context.Pool, context.Wallet, request.Did);
+            await Did.StoreTheirDidAsync(context.Wallet, JsonConvert.SerializeObject(new { did = request.Did, verkey = theirKey }));
+            await Pairwise.CreateAsync(context.Wallet, request.Did, myDid, null);
+
+            Console.WriteLine($"Saving their did {request.Did} {theirKey}");
+
+            // TODO: process Endpoint and EndpointDid
 
             var response = new ConnectionResponse
             {
-                Did = my.Did,
-                Verkey = my.VerKey,
+                Did = myDid,
+                Verkey = myVk,
                 RequestNonce = request.RequestNonce
             };
 
@@ -130,7 +143,8 @@ namespace AgentFramework.MessageHandlers.Handlers
                 Id = request.RequestNonce,
                 Type = SovrinMessages.CONNECTION_RESPONSE,
                 Aud = request.Did,
-                Content = ByteString.CopyFrom(await Crypto.AnonCryptAsync(their, response.ToByteArray()))
+                Origin = myDid,
+                Content = ByteString.CopyFrom(await Crypto.AnonCryptAsync(theirKey, response.ToByteArray()))
             };
             await routerService.SendAsync(request.EndpointDid, res, context);
 
@@ -145,14 +159,14 @@ namespace AgentFramework.MessageHandlers.Handlers
         protected virtual async Task<Msg> ConnectionAcknowledge(Msg message, IdentityContext context)
         {
             var myDid = await Pairwise.GetAsync(context.Wallet, message.Origin);
-            var myKey = await Did.KeyForLocalDidAsync(context.Wallet, myDid);
+            var myKey = await Did.KeyForLocalDidAsync(context.Wallet, JObject.Parse(myDid)["my_did"].ToObject<string>());
 
-            var decrypted = await Crypto.AuthDecryptAsync(context.Wallet, myKey, message.ToByteArray());
+            var decrypted = await Crypto.AuthDecryptAsync(context.Wallet, myKey, message.Content.ToByteArray());
 
             var ack = new ConnectionAcknowledgement();
             ack.MergeFrom(decrypted.MessageData);
 
-            Console.WriteLine(ack.Message);
+            Console.WriteLine($"Ackowleedgement message \"{ack.Message}\" from {message.Origin}");
 
             return null;
         }
@@ -162,8 +176,8 @@ namespace AgentFramework.MessageHandlers.Handlers
             var nym = new SendNym();
             nym.MergeFrom(message.Content.ToByteArray());
 
-            var req = await Ledger.BuildNymRequestAsync(context.MyDid, nym.Did, context.TheirVk, null, null);
-            var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyDid, req);
+            var req = await Ledger.BuildNymRequestAsync(context.MyPublicDid, nym.Did, nym.Verkey, null, null);
+            var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyPublicDid, req);
 
             return null;
         }
@@ -178,8 +192,12 @@ namespace AgentFramework.MessageHandlers.Handlers
             // Generate new keypair
             var my = await Did.CreateAndStoreMyDidAsync(context.Wallet, "{}");
 
+            // Send did to ledger
+            var nymRequest = await Ledger.BuildNymRequestAsync(context.MyPublicDid, my.Did, my.VerKey, null, null);
+            var nymResponse = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyPublicDid, nymRequest);
+
             // Retrieve endpoint for this agent
-            var myEndpoint = await Did.GetEndpointForDidAsync(context.Wallet, context.Pool, context.MyDid);
+            var myEndpoint = await Did.GetEndpointForDidAsync(context.Wallet, context.Pool, context.MyPublicDid);
 
             var offer = new ConnectionOffer
             {
@@ -188,6 +206,8 @@ namespace AgentFramework.MessageHandlers.Handlers
                 OfferNonce = Guid.NewGuid().ToString().ToLowerInvariant(),
                 Endpoint = myEndpoint.Address
             };
+
+            await storageService.SetNonce(offer.OfferNonce, offer.ToByteArray());
 
             return new Msg
             {

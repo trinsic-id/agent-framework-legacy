@@ -35,8 +35,9 @@ namespace Indy.Agent.Messages
                   "IAEoCRIQCghlbmRwb2ludBgEIAEoCSJIChJDb25uZWN0aW9uUmVzcG9uc2US",
                   "CwoDZGlkGAEgASgJEg4KBnZlcmtleRgCIAEoCRIVCg1yZXF1ZXN0X25vbmNl",
                   "GAMgASgJIiwKGUNvbm5lY3Rpb25BY2tub3dsZWRnZW1lbnQSDwoHbWVzc2Fn",
-                  "ZRgBIAEoCSIWCgdTZW5kTnltEgsKA2RpZBgBIAEoCSIXChVDcmVhdGVDb25u",
-                  "ZWN0aW9uT2ZmZXJCFqoCE0luZHkuQWdlbnQuTWVzc2FnZXNiBnByb3RvMw=="));
+                  "ZRgBIAEoCSImCgdTZW5kTnltEgsKA2RpZBgBIAEoCRIOCgZ2ZXJrZXkYAiAB",
+                  "KAkiFwoVQ3JlYXRlQ29ubmVjdGlvbk9mZmVyQhaqAhNJbmR5LkFnZW50Lk1l",
+                  "c3NhZ2VzYgZwcm90bzM="));
             descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
                 new pbr::FileDescriptor[] { },
                 new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -44,7 +45,7 @@ namespace Indy.Agent.Messages
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionRequest), global::Indy.Agent.Messages.ConnectionRequest.Parser, new[]{ "Did", "RequestNonce", "EndpointDid", "Endpoint" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionResponse), global::Indy.Agent.Messages.ConnectionResponse.Parser, new[]{ "Did", "Verkey", "RequestNonce" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionAcknowledgement), global::Indy.Agent.Messages.ConnectionAcknowledgement.Parser, new[]{ "Message" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.SendNym), global::Indy.Agent.Messages.SendNym.Parser, new[]{ "Did" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.SendNym), global::Indy.Agent.Messages.SendNym.Parser, new[]{ "Did", "Verkey" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.CreateConnectionOffer), global::Indy.Agent.Messages.CreateConnectionOffer.Parser, null, null, null, null)
                 }));
         }
@@ -983,6 +984,7 @@ namespace Indy.Agent.Messages
         public SendNym(SendNym other) : this()
         {
             did_ = other.did_;
+            verkey_ = other.verkey_;
             _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
@@ -1005,6 +1007,19 @@ namespace Indy.Agent.Messages
             }
         }
 
+        /// <summary>Field number for the "verkey" field.</summary>
+        public const int VerkeyFieldNumber = 2;
+        private string verkey_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public string Verkey
+        {
+            get { return verkey_; }
+            set
+            {
+                verkey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+            }
+        }
+
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public override bool Equals(object other)
         {
@@ -1023,6 +1038,7 @@ namespace Indy.Agent.Messages
                 return true;
             }
             if (Did != other.Did) return false;
+            if (Verkey != other.Verkey) return false;
             return Equals(_unknownFields, other._unknownFields);
         }
 
@@ -1031,6 +1047,7 @@ namespace Indy.Agent.Messages
         {
             int hash = 1;
             if (Did.Length != 0) hash ^= Did.GetHashCode();
+            if (Verkey.Length != 0) hash ^= Verkey.GetHashCode();
             if (_unknownFields != null)
             {
                 hash ^= _unknownFields.GetHashCode();
@@ -1052,6 +1069,11 @@ namespace Indy.Agent.Messages
                 output.WriteRawTag(10);
                 output.WriteString(Did);
             }
+            if (Verkey.Length != 0)
+            {
+                output.WriteRawTag(18);
+                output.WriteString(Verkey);
+            }
             if (_unknownFields != null)
             {
                 _unknownFields.WriteTo(output);
@@ -1065,6 +1087,10 @@ namespace Indy.Agent.Messages
             if (Did.Length != 0)
             {
                 size += 1 + pb::CodedOutputStream.ComputeStringSize(Did);
+            }
+            if (Verkey.Length != 0)
+            {
+                size += 1 + pb::CodedOutputStream.ComputeStringSize(Verkey);
             }
             if (_unknownFields != null)
             {
@@ -1084,6 +1110,10 @@ namespace Indy.Agent.Messages
             {
                 Did = other.Did;
             }
+            if (other.Verkey.Length != 0)
+            {
+                Verkey = other.Verkey;
+            }
             _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
 
@@ -1101,6 +1131,11 @@ namespace Indy.Agent.Messages
                     case 10:
                         {
                             Did = input.ReadString();
+                            break;
+                        }
+                    case 18:
+                        {
+                            Verkey = input.ReadString();
                             break;
                         }
                 }
