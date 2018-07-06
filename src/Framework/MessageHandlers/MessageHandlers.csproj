@@ -10,6 +10,7 @@
     <Folder Include="Handlers\" />
     <Folder Include="Services\" />
     <Folder Include="Services\Contracts\" />
+    <Folder Include="Domain\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />

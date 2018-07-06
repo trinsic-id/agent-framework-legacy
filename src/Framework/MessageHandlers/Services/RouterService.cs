@@ -28,7 +28,7 @@ namespace AgentFramework.MessageHandlers.Services
 
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri($"http://{endpoint.Address}/"),
+                RequestUri = new Uri(endpoint.Address),
                 Method = HttpMethod.Post,
                 Content = new ByteArrayContent(encrypted)
             };

@@ -30,19 +30,19 @@ namespace Indy.Agent.Messages
                 string.Concat(
                   "ChBjb25uZWN0aW9uLnByb3RvIlUKD0Nvbm5lY3Rpb25PZmZlchILCgNkaWQY",
                   "ASABKAkSDgoGdmVya2V5GAIgASgJEhAKCGVuZHBvaW50GAMgASgJEhMKC29m",
-                  "ZmVyX25vbmNlGAQgASgJIl8KEUNvbm5lY3Rpb25SZXF1ZXN0EgsKA2RpZBgB",
-                  "IAEoCRIVCg1yZXF1ZXN0X25vbmNlGAIgASgJEhQKDGVuZHBvaW50X2RpZBgD",
-                  "IAEoCRIQCghlbmRwb2ludBgEIAEoCSJIChJDb25uZWN0aW9uUmVzcG9uc2US",
-                  "CwoDZGlkGAEgASgJEg4KBnZlcmtleRgCIAEoCRIVCg1yZXF1ZXN0X25vbmNl",
-                  "GAMgASgJIiwKGUNvbm5lY3Rpb25BY2tub3dsZWRnZW1lbnQSDwoHbWVzc2Fn",
-                  "ZRgBIAEoCSImCgdTZW5kTnltEgsKA2RpZBgBIAEoCRIOCgZ2ZXJrZXkYAiAB",
-                  "KAkiFwoVQ3JlYXRlQ29ubmVjdGlvbk9mZmVyQhaqAhNJbmR5LkFnZW50Lk1l",
-                  "c3NhZ2VzYgZwcm90bzM="));
+                  "ZmVyX25vbmNlGAQgASgJIm8KEUNvbm5lY3Rpb25SZXF1ZXN0EgsKA2RpZBgB",
+                  "IAEoCRIOCgZ2ZXJrZXkYAiABKAkSFQoNcmVxdWVzdF9ub25jZRgDIAEoCRIU",
+                  "CgxlbmRwb2ludF9kaWQYBCABKAkSEAoIZW5kcG9pbnQYBSABKAkiSAoSQ29u",
+                  "bmVjdGlvblJlc3BvbnNlEgsKA2RpZBgBIAEoCRIOCgZ2ZXJrZXkYAiABKAkS",
+                  "FQoNcmVxdWVzdF9ub25jZRgDIAEoCSIsChlDb25uZWN0aW9uQWNrbm93bGVk",
+                  "Z2VtZW50Eg8KB21lc3NhZ2UYASABKAkiJgoHU2VuZE55bRILCgNkaWQYASAB",
+                  "KAkSDgoGdmVya2V5GAIgASgJIhcKFUNyZWF0ZUNvbm5lY3Rpb25PZmZlckIW",
+                  "qgITSW5keS5BZ2VudC5NZXNzYWdlc2IGcHJvdG8z"));
             descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
                 new pbr::FileDescriptor[] { },
                 new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionOffer), global::Indy.Agent.Messages.ConnectionOffer.Parser, new[]{ "Did", "Verkey", "Endpoint", "OfferNonce" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionRequest), global::Indy.Agent.Messages.ConnectionRequest.Parser, new[]{ "Did", "RequestNonce", "EndpointDid", "Endpoint" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionRequest), global::Indy.Agent.Messages.ConnectionRequest.Parser, new[]{ "Did", "Verkey", "RequestNonce", "EndpointDid", "Endpoint" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionResponse), global::Indy.Agent.Messages.ConnectionResponse.Parser, new[]{ "Did", "Verkey", "RequestNonce" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.ConnectionAcknowledgement), global::Indy.Agent.Messages.ConnectionAcknowledgement.Parser, new[]{ "Message" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.SendNym), global::Indy.Agent.Messages.SendNym.Parser, new[]{ "Did", "Verkey" }, null, null, null),
@@ -343,6 +343,7 @@ namespace Indy.Agent.Messages
         public ConnectionRequest(ConnectionRequest other) : this()
         {
             did_ = other.did_;
+            verkey_ = other.verkey_;
             requestNonce_ = other.requestNonce_;
             endpointDid_ = other.endpointDid_;
             endpoint_ = other.endpoint_;
@@ -368,8 +369,21 @@ namespace Indy.Agent.Messages
             }
         }
 
+        /// <summary>Field number for the "verkey" field.</summary>
+        public const int VerkeyFieldNumber = 2;
+        private string verkey_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public string Verkey
+        {
+            get { return verkey_; }
+            set
+            {
+                verkey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+            }
+        }
+
         /// <summary>Field number for the "request_nonce" field.</summary>
-        public const int RequestNonceFieldNumber = 2;
+        public const int RequestNonceFieldNumber = 3;
         private string requestNonce_ = "";
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public string RequestNonce
@@ -382,7 +396,7 @@ namespace Indy.Agent.Messages
         }
 
         /// <summary>Field number for the "endpoint_did" field.</summary>
-        public const int EndpointDidFieldNumber = 3;
+        public const int EndpointDidFieldNumber = 4;
         private string endpointDid_ = "";
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public string EndpointDid
@@ -395,7 +409,7 @@ namespace Indy.Agent.Messages
         }
 
         /// <summary>Field number for the "endpoint" field.</summary>
-        public const int EndpointFieldNumber = 4;
+        public const int EndpointFieldNumber = 5;
         private string endpoint_ = "";
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public string Endpoint
@@ -425,6 +439,7 @@ namespace Indy.Agent.Messages
                 return true;
             }
             if (Did != other.Did) return false;
+            if (Verkey != other.Verkey) return false;
             if (RequestNonce != other.RequestNonce) return false;
             if (EndpointDid != other.EndpointDid) return false;
             if (Endpoint != other.Endpoint) return false;
@@ -436,6 +451,7 @@ namespace Indy.Agent.Messages
         {
             int hash = 1;
             if (Did.Length != 0) hash ^= Did.GetHashCode();
+            if (Verkey.Length != 0) hash ^= Verkey.GetHashCode();
             if (RequestNonce.Length != 0) hash ^= RequestNonce.GetHashCode();
             if (EndpointDid.Length != 0) hash ^= EndpointDid.GetHashCode();
             if (Endpoint.Length != 0) hash ^= Endpoint.GetHashCode();
@@ -460,19 +476,24 @@ namespace Indy.Agent.Messages
                 output.WriteRawTag(10);
                 output.WriteString(Did);
             }
-            if (RequestNonce.Length != 0)
+            if (Verkey.Length != 0)
             {
                 output.WriteRawTag(18);
+                output.WriteString(Verkey);
+            }
+            if (RequestNonce.Length != 0)
+            {
+                output.WriteRawTag(26);
                 output.WriteString(RequestNonce);
             }
             if (EndpointDid.Length != 0)
             {
-                output.WriteRawTag(26);
+                output.WriteRawTag(34);
                 output.WriteString(EndpointDid);
             }
             if (Endpoint.Length != 0)
             {
-                output.WriteRawTag(34);
+                output.WriteRawTag(42);
                 output.WriteString(Endpoint);
             }
             if (_unknownFields != null)
@@ -488,6 +509,10 @@ namespace Indy.Agent.Messages
             if (Did.Length != 0)
             {
                 size += 1 + pb::CodedOutputStream.ComputeStringSize(Did);
+            }
+            if (Verkey.Length != 0)
+            {
+                size += 1 + pb::CodedOutputStream.ComputeStringSize(Verkey);
             }
             if (RequestNonce.Length != 0)
             {
@@ -518,6 +543,10 @@ namespace Indy.Agent.Messages
             if (other.Did.Length != 0)
             {
                 Did = other.Did;
+            }
+            if (other.Verkey.Length != 0)
+            {
+                Verkey = other.Verkey;
             }
             if (other.RequestNonce.Length != 0)
             {
@@ -552,15 +581,20 @@ namespace Indy.Agent.Messages
                         }
                     case 18:
                         {
-                            RequestNonce = input.ReadString();
+                            Verkey = input.ReadString();
                             break;
                         }
                     case 26:
                         {
-                            EndpointDid = input.ReadString();
+                            RequestNonce = input.ReadString();
                             break;
                         }
                     case 34:
+                        {
+                            EndpointDid = input.ReadString();
+                            break;
+                        }
+                    case 42:
                         {
                             Endpoint = input.ReadString();
                             break;

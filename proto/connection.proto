@@ -13,9 +13,10 @@ message ConnectionOffer {
 
 message ConnectionRequest {
     string did = 1;
-    string request_nonce = 2;
-    string endpoint_did = 3;
-    string endpoint = 4;
+    string verkey = 2;
+    string request_nonce = 3;
+    string endpoint_did = 4;
+    string endpoint = 5;
 }
 
 message ConnectionResponse {

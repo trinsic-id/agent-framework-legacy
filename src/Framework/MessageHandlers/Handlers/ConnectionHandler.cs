@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AgentFramework.MessageHandlers.Domain;
 using AgentFramework.MessageHandlers.Handlers;
 using AgentFramework.MessageHandlers.Services.Contracts;
 using Google.Protobuf;
@@ -43,7 +44,6 @@ namespace AgentFramework.MessageHandlers.Handlers
             : this(storageService, routerService,
                    SovrinMessages.CONNECTION_OFFER,
                    SovrinMessages.CONNECTION_REQUEST,
-                   SovrinMessages.CONNECTION_RESPONSE,
                    SovrinMessages.CONNECTION_ACKONOWLEDGEMENT,
                    StreetcredMessages.SEND_NYM,
                    StreetcredMessages.CREATE_CONNECTION_OFFER)
@@ -66,9 +66,6 @@ namespace AgentFramework.MessageHandlers.Handlers
                 case SovrinMessages.CONNECTION_REQUEST:
                     return await ConnectionRequest(message, context);
 
-                case SovrinMessages.CONNECTION_RESPONSE:
-                    return await StoreConnectionResponse(message, context);
-
                 case StreetcredMessages.SEND_NYM:
                     return await SendNym(message, context);
 
@@ -76,21 +73,6 @@ namespace AgentFramework.MessageHandlers.Handlers
                     return await CreateConnectionOffer(context);
             }
             throw new Exception("Unsupported message exception");
-        }
-
-        /// <summary>
-        /// Stores a connection response
-        /// </summary>
-        /// <returns>The connection response.</returns>
-        /// <param name="message">Message.</param>
-        /// <param name="context">Context.</param>
-        protected virtual async Task<Msg> StoreConnectionResponse(Msg message, IdentityContext context)
-        {
-            await Task.Yield();
-
-            storageService.Add(message);
-
-            return null;
         }
 
         /// <summary>
@@ -102,34 +84,38 @@ namespace AgentFramework.MessageHandlers.Handlers
             var request = new ConnectionRequest();
             request.MergeFrom(message.Content);
 
-            string myDid;
-            string myVk;
-
             if (await storageService.TryGetNonce(request.RequestNonce, out byte[] offerMessage))
             {
                 var offer = new ConnectionOffer();
                 offer.MergeFrom(offerMessage);
 
-                myDid = offer.Did;
-                myVk = offer.Verkey;
-            }
-            else
-            {
-                var my = await Did.CreateAndStoreMyDidAsync(context.Wallet, "{}");
-                myDid = my.Did;
-                myVk = my.VerKey;
-
-                var nymRequest = await Ledger.BuildNymRequestAsync(context.MyPublicDid, my.Did, my.VerKey, null, null);
-                var nymResponse = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyPublicDid, nymRequest);
+                if (request.RequestNonce != offer.OfferNonce)
+                    throw new Exception("Unknown nonce");
             }
 
-            var theirKey = await Did.KeyForDidAsync(context.Pool, context.Wallet, request.Did);
+            if (string.IsNullOrWhiteSpace(request.EndpointDid)) throw new ArgumentException("Endpoint Did must be set.");
+            if (string.IsNullOrWhiteSpace(request.Endpoint)) throw new ArgumentException("Endpoint must be set.");
+
+            var my = await Did.CreateAndStoreMyDidAsync(context.Wallet, "{}");
+            var myDid = my.Did;
+            var myVk = my.VerKey;
+
+            //var nymRequest = await Ledger.BuildNymRequestAsync(context.MyPublicDid, my.Did, my.VerKey, null, null);
+            //var nymResponse = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyPublicDid, nymRequest);
+
+            var theirKey = request.Verkey ?? await Did.KeyForDidAsync(context.Pool, context.Wallet, request.Did);
+
             await Did.StoreTheirDidAsync(context.Wallet, JsonConvert.SerializeObject(new { did = request.Did, verkey = theirKey }));
             await Pairwise.CreateAsync(context.Wallet, request.Did, myDid, null);
 
-            Console.WriteLine($"Saving their did {request.Did} {theirKey}");
+            await Did.SetDidMetadataAsync(context.Wallet, request.Did, JsonConvert.SerializeObject(new DidMetadata
+            {
+                EndpointDid = request.EndpointDid,
+                Endpoint = request.Endpoint
+            }));
 
-            // TODO: process Endpoint and EndpointDid
+            await Did.SetEndpointForDidAsync(context.Wallet, request.Did, request.Endpoint, theirKey);
+            await Did.SetEndpointForDidAsync(context.Wallet, request.EndpointDid, request.Endpoint, theirKey);
 
             var response = new ConnectionResponse
             {
@@ -142,9 +128,7 @@ namespace AgentFramework.MessageHandlers.Handlers
             {
                 Id = request.RequestNonce,
                 Type = SovrinMessages.CONNECTION_RESPONSE,
-                Aud = request.Did,
-                Origin = myDid,
-                Content = ByteString.CopyFrom(await Crypto.AnonCryptAsync(theirKey, response.ToByteArray()))
+                Content = ByteString.CopyFrom(await Crypto.AuthCryptAsync(context.Wallet, myVk, theirKey, response.ToByteArray()))
             };
             await routerService.SendAsync(request.EndpointDid, res, context);
 
@@ -158,15 +142,17 @@ namespace AgentFramework.MessageHandlers.Handlers
         /// <param name="context">Context.</param>
         protected virtual async Task<Msg> ConnectionAcknowledge(Msg message, IdentityContext context)
         {
-            var myDid = await Pairwise.GetAsync(context.Wallet, message.Origin);
+            var myDid = await Pairwise.GetAsync(context.Wallet, message.Id);
             var myKey = await Did.KeyForLocalDidAsync(context.Wallet, JObject.Parse(myDid)["my_did"].ToObject<string>());
+
+            await Pairwise.SetMetadataAsync(context.Wallet, message.Id, JsonConvert.SerializeObject(new PairwiseMetadata { Trusted = true }));
 
             var decrypted = await Crypto.AuthDecryptAsync(context.Wallet, myKey, message.Content.ToByteArray());
 
             var ack = new ConnectionAcknowledgement();
             ack.MergeFrom(decrypted.MessageData);
 
-            Console.WriteLine($"Ackowleedgement message \"{ack.Message}\" from {message.Origin}");
+            Console.WriteLine($"Ackowleedgement message \"{ack.Message}\" from {message.Id}");
 
             return null;
         }
@@ -189,22 +175,11 @@ namespace AgentFramework.MessageHandlers.Handlers
         /// <param name="context">Context.</param>
         protected virtual async Task<Msg> CreateConnectionOffer(IdentityContext context)
         {
-            // Generate new keypair
-            var my = await Did.CreateAndStoreMyDidAsync(context.Wallet, "{}");
-
-            // Send did to ledger
-            var nymRequest = await Ledger.BuildNymRequestAsync(context.MyPublicDid, my.Did, my.VerKey, null, null);
-            var nymResponse = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyPublicDid, nymRequest);
-
-            // Retrieve endpoint for this agent
-            var myEndpoint = await Did.GetEndpointForDidAsync(context.Wallet, context.Pool, context.MyPublicDid);
-
             var offer = new ConnectionOffer
             {
-                Did = my.Did,
-                Verkey = my.VerKey,
-                OfferNonce = Guid.NewGuid().ToString().ToLowerInvariant(),
-                Endpoint = myEndpoint.Address
+                Did = context.MyPublicDid,
+                Verkey = context.MyPublicVerkey,
+                OfferNonce = Guid.NewGuid().ToString().ToLowerInvariant()
             };
 
             await storageService.SetNonce(offer.OfferNonce, offer.ToByteArray());
