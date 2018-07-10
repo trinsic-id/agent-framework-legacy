@@ -48,7 +48,7 @@ namespace AgentFramework.MessageHandlers.Handlers
         protected Task<Msg> GetMessages(Msg msg, IdentityContext context)
         {
             var result = new GetMessagesResponse();
-            result.Messages.AddRange(storageService.Get(x => x.Aud == msg.Origin));
+            result.Messages.AddRange(storageService.Get(x => x.Id == msg.Id));
 
             return Task.FromResult(new Msg
             {

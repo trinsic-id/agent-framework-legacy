@@ -45,7 +45,6 @@ namespace AgentFramework.MessageHandlers.Handlers
                    SovrinMessages.CONNECTION_OFFER,
                    SovrinMessages.CONNECTION_REQUEST,
                    SovrinMessages.CONNECTION_ACKONOWLEDGEMENT,
-                   StreetcredMessages.SEND_NYM,
                    StreetcredMessages.CREATE_CONNECTION_OFFER)
         {
         }
@@ -65,9 +64,6 @@ namespace AgentFramework.MessageHandlers.Handlers
 
                 case SovrinMessages.CONNECTION_REQUEST:
                     return await ConnectionRequest(message, context);
-
-                case StreetcredMessages.SEND_NYM:
-                    return await SendNym(message, context);
 
                 case StreetcredMessages.CREATE_CONNECTION_OFFER:
                     return await CreateConnectionOffer(context);
@@ -153,17 +149,6 @@ namespace AgentFramework.MessageHandlers.Handlers
             ack.MergeFrom(decrypted.MessageData);
 
             Console.WriteLine($"Ackowleedgement message \"{ack.Message}\" from {message.Id}");
-
-            return null;
-        }
-
-        protected virtual async Task<Msg> SendNym(Msg message, IdentityContext context)
-        {
-            var nym = new SendNym();
-            nym.MergeFrom(message.Content.ToByteArray());
-
-            var req = await Ledger.BuildNymRequestAsync(context.MyPublicDid, nym.Did, nym.Verkey, null, null);
-            var res = await Ledger.SignAndSubmitRequestAsync(context.Pool, context.Wallet, context.MyPublicDid, req);
 
             return null;
         }

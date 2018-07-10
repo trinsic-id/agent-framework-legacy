@@ -28,17 +28,14 @@ namespace Indy.Agent.Messages
         {
             byte[] descriptorData = global::System.Convert.FromBase64String(
                 string.Concat(
-                  "Cg5tZXNzYWdlcy5wcm90byJNCgNNc2cSCgoCaWQYASABKAkSDAoEdHlwZRgC",
-                  "IAEoCRILCgNhdWQYAyABKAkSDgoGb3JpZ2luGAQgASgJEg8KB2NvbnRlbnQY",
-                  "BSABKAwiGgoLR2V0TWVzc2FnZXMSCwoDZGlkGAEgASgJIi0KE0dldE1lc3Nh",
-                  "Z2VzUmVzcG9uc2USFgoIbWVzc2FnZXMYASADKAsyBC5Nc2cqXAoGU3RhdHVz",
-                  "EgYKAk9LEAASCQoFRVJST1IQARIVChFJTlZBTElEX1NJR05BVFVSRRACEhUK",
-                  "EU1JU1NJTkdfU0lHTkFUVVJFEAMSEQoNVU5LTk9XTl9FUlJPUhAEQhaqAhNJ",
-                  "bmR5LkFnZW50Lk1lc3NhZ2VzYgZwcm90bzM="));
+                  "Cg5tZXNzYWdlcy5wcm90byIwCgNNc2cSCgoCaWQYASABKAkSDAoEdHlwZRgC",
+                  "IAEoCRIPCgdjb250ZW50GAUgASgMIhoKC0dldE1lc3NhZ2VzEgsKA2RpZBgB",
+                  "IAEoCSItChNHZXRNZXNzYWdlc1Jlc3BvbnNlEhYKCG1lc3NhZ2VzGAEgAygL",
+                  "MgQuTXNnQhaqAhNJbmR5LkFnZW50Lk1lc3NhZ2VzYgZwcm90bzM="));
             descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
                 new pbr::FileDescriptor[] { },
-                new pbr::GeneratedClrTypeInfo(new[] { typeof(global::Indy.Agent.Messages.Status), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.Msg), global::Indy.Agent.Messages.Msg.Parser, new[]{ "Id", "Type", "Aud", "Origin", "Content" }, null, null, null),
+                new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.Msg), global::Indy.Agent.Messages.Msg.Parser, new[]{ "Id", "Type", "Content" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.GetMessages), global::Indy.Agent.Messages.GetMessages.Parser, new[]{ "Did" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Indy.Agent.Messages.GetMessagesResponse), global::Indy.Agent.Messages.GetMessagesResponse.Parser, new[]{ "Messages" }, null, null, null)
                 }));
@@ -46,18 +43,6 @@ namespace Indy.Agent.Messages
         #endregion
 
     }
-    #region Enums
-    public enum Status
-    {
-        [pbr::OriginalName("OK")] Ok = 0,
-        [pbr::OriginalName("ERROR")] Error = 1,
-        [pbr::OriginalName("INVALID_SIGNATURE")] InvalidSignature = 2,
-        [pbr::OriginalName("MISSING_SIGNATURE")] MissingSignature = 3,
-        [pbr::OriginalName("UNKNOWN_ERROR")] UnknownError = 4,
-    }
-
-    #endregion
-
     #region Messages
     public sealed partial class Msg : pb::IMessage<Msg>
     {
@@ -91,8 +76,6 @@ namespace Indy.Agent.Messages
         {
             id_ = other.id_;
             type_ = other.type_;
-            aud_ = other.aud_;
-            origin_ = other.origin_;
             content_ = other.content_;
             _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
@@ -129,32 +112,6 @@ namespace Indy.Agent.Messages
             }
         }
 
-        /// <summary>Field number for the "aud" field.</summary>
-        public const int AudFieldNumber = 3;
-        private string aud_ = "";
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public string Aud
-        {
-            get { return aud_; }
-            set
-            {
-                aud_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-            }
-        }
-
-        /// <summary>Field number for the "origin" field.</summary>
-        public const int OriginFieldNumber = 4;
-        private string origin_ = "";
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public string Origin
-        {
-            get { return origin_; }
-            set
-            {
-                origin_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-            }
-        }
-
         /// <summary>Field number for the "content" field.</summary>
         public const int ContentFieldNumber = 5;
         private pb::ByteString content_ = pb::ByteString.Empty;
@@ -187,8 +144,6 @@ namespace Indy.Agent.Messages
             }
             if (Id != other.Id) return false;
             if (Type != other.Type) return false;
-            if (Aud != other.Aud) return false;
-            if (Origin != other.Origin) return false;
             if (Content != other.Content) return false;
             return Equals(_unknownFields, other._unknownFields);
         }
@@ -199,8 +154,6 @@ namespace Indy.Agent.Messages
             int hash = 1;
             if (Id.Length != 0) hash ^= Id.GetHashCode();
             if (Type.Length != 0) hash ^= Type.GetHashCode();
-            if (Aud.Length != 0) hash ^= Aud.GetHashCode();
-            if (Origin.Length != 0) hash ^= Origin.GetHashCode();
             if (Content.Length != 0) hash ^= Content.GetHashCode();
             if (_unknownFields != null)
             {
@@ -228,16 +181,6 @@ namespace Indy.Agent.Messages
                 output.WriteRawTag(18);
                 output.WriteString(Type);
             }
-            if (Aud.Length != 0)
-            {
-                output.WriteRawTag(26);
-                output.WriteString(Aud);
-            }
-            if (Origin.Length != 0)
-            {
-                output.WriteRawTag(34);
-                output.WriteString(Origin);
-            }
             if (Content.Length != 0)
             {
                 output.WriteRawTag(42);
@@ -260,14 +203,6 @@ namespace Indy.Agent.Messages
             if (Type.Length != 0)
             {
                 size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
-            }
-            if (Aud.Length != 0)
-            {
-                size += 1 + pb::CodedOutputStream.ComputeStringSize(Aud);
-            }
-            if (Origin.Length != 0)
-            {
-                size += 1 + pb::CodedOutputStream.ComputeStringSize(Origin);
             }
             if (Content.Length != 0)
             {
@@ -295,14 +230,6 @@ namespace Indy.Agent.Messages
             {
                 Type = other.Type;
             }
-            if (other.Aud.Length != 0)
-            {
-                Aud = other.Aud;
-            }
-            if (other.Origin.Length != 0)
-            {
-                Origin = other.Origin;
-            }
             if (other.Content.Length != 0)
             {
                 Content = other.Content;
@@ -329,16 +256,6 @@ namespace Indy.Agent.Messages
                     case 18:
                         {
                             Type = input.ReadString();
-                            break;
-                        }
-                    case 26:
-                        {
-                            Aud = input.ReadString();
-                            break;
-                        }
-                    case 34:
-                        {
-                            Origin = input.ReadString();
                             break;
                         }
                     case 42:

@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using AgentFramework.AspNetCore.Extensions.Configuration;
 using AgentFramework.MessageHandlers;
+using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.LedgerApi;
 using Hyperledger.Indy.PoolApi;
@@ -78,8 +79,10 @@ namespace AgentFramework.AspNetCore.Extensions.Services
             {
                 Debug.WriteLine("Configuration exists");
             }
-
-            pool = await Pool.OpenPoolLedgerAsync(options.PoolOptions.PoolName, null);
+            finally
+            {
+                pool = await Pool.OpenPoolLedgerAsync(options.PoolOptions.PoolName, null);
+            }
 
             try
             {

@@ -19,10 +19,10 @@ namespace AgentFramework.MessageHandlers.Services
             httpClient = new HttpClient();
         }
 
-        public async Task SendAsync(string did, Msg message, IdentityContext context)
+        public async Task SendAsync(string agentPublicDid, Msg message, IdentityContext context)
         {
-            var endpoint = await Did.GetEndpointForDidAsync(context.Wallet, context.Pool, did);
-            var theirKey = await Did.KeyForDidAsync(context.Pool, context.Wallet, did);
+            var endpoint = await Did.GetEndpointForDidAsync(context.Wallet, context.Pool, agentPublicDid);
+            var theirKey = await Did.KeyForDidAsync(context.Pool, context.Wallet, agentPublicDid);
 
             var encrypted = await Crypto.AnonCryptAsync(theirKey, message.ToByteArray());
 
