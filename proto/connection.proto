@@ -5,24 +5,27 @@ option csharp_namespace = "Indy.Agent.Messages";
 // urn:sovrin:agent:message_type:sovrin.org/*
 
 message ConnectionOffer {
+    string offer_nonce = 2;
+    Endpoint endpoint = 1;
+}
+
+message Endpoint {
     string did = 1;
-    string verkey = 2;
-    string endpoint = 3;
-    string offer_nonce = 4;
+    // specify did if endpoint information is on the ledger, otherwise specify uri and verkey
+    string uri = 2;
+    string verkey = 3;
 }
 
 message ConnectionRequest {
     string did = 1;
     string verkey = 2;
     string request_nonce = 3;
-    string endpoint_did = 4;
-    string endpoint = 5;
+    Endpoint endpoint = 4;
 }
 
 message ConnectionResponse {
     string did = 1;
     string verkey = 2;
-    string request_nonce = 3;
 }
 
 message ConnectionAcknowledgement {

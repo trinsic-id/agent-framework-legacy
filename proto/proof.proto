@@ -8,4 +8,7 @@ message ProofRequest {
 
 message Proof {
     string proof_json = 1;
+    string proof_req_json = 2;
+    string schemas_json = 3;
+    string cred_defs_json = 4;
 }

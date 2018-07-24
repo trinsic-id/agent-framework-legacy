@@ -9,12 +9,11 @@
   <ItemGroup>
     <Folder Include="Handlers\" />
     <Folder Include="Services\" />
-    <Folder Include="Services\Contracts\" />
     <Folder Include="Domain\" />
+    <Folder Include="Contracts\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Messages.cs" />
@@ -23,13 +22,17 @@
     <Compile Remove="Handlers\RegistrarHandler.cs" />
     <Compile Remove="Handlers\AuthenticationHandler.cs" />
     <Compile Remove="Handlers\VerifierHandler.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Messages\Messages.csproj" />
+    <Compile Remove="Services\StorageService.cs" />
+    <Compile Remove="Extensions.cs" />
+    <Compile Remove="Handlers\SchemaHandler.cs" />
+    <Compile Remove="Handlers\MessagesHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Hyperledger.Indy.Sdk">
       <HintPath>..\..\..\lib\Hyperledger.Indy.Sdk.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages\Sovrin.Messages.csproj" />
   </ItemGroup>
 </Project>
